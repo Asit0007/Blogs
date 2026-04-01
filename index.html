@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>From Bare Server to Production Magento Stack — Asit Minz</title>
+<title>Asit Minz — Engineering Blog</title>
+<meta name="description" content="Infrastructure engineering, DevOps, and backend systems — written by Asit Minz.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -17,7 +18,6 @@
     --bg: #faf9f6;
     --bg-card: #ffffff;
     --bg-code: #f0ede6;
-    --bg-highlight: #fff8ec;
     --rule: #e2dfd6;
     --accent: #c84b11;
     --accent-soft: #f2ddd3;
@@ -36,6 +36,7 @@
     font-weight: 400;
     line-height: 1.75;
     -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
   }
 
   /* ── HEADER ── */
@@ -69,106 +70,125 @@
   }
   .site-header nav a:hover { color: var(--accent); }
 
-  /* ── HERO ── */
-  .hero {
-    max-width: 780px;
+  /* ── PAGE INTRO ── */
+  .page-intro {
+    max-width: 860px;
     margin: 0 auto;
-    padding: 5rem 2rem 3rem;
+    padding: 4.5rem 2rem 3rem;
     border-bottom: 1px solid var(--rule);
-  }
-  .hero-meta {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-  }
-  .tag {
-    background: var(--accent);
-    color: white;
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 0.3em 0.8em;
-    border-radius: 2px;
-  }
-  .tag.green { background: var(--accent-2); }
-  .tag.blue { background: var(--blue); }
-  .hero-meta time {
-    font-size: 0.82rem;
-    color: var(--ink-muted);
-    font-weight: 400;
-  }
-  .hero-meta .dot {
-    width: 3px; height: 3px;
-    background: var(--ink-faint);
-    border-radius: 50%;
-  }
-  .hero-meta .read-time {
-    font-size: 0.82rem;
-    color: var(--ink-muted);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2rem;
+    align-items: end;
   }
 
-  h1.hero-title {
+  .intro-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .intro-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1.page-title {
     font-family: 'DM Serif Display', serif;
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: 1.18;
-    letter-spacing: -0.02em;
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
     color: var(--ink);
     margin-bottom: 1.25rem;
   }
-  h1.hero-title em {
+  h1.page-title em {
     font-style: italic;
     color: var(--accent);
   }
 
-  .hero-sub {
-    font-size: 1.1rem;
-    color: var(--ink-mid);
+  .page-desc {
+    font-size: 1rem;
+    color: var(--ink-muted);
+    max-width: 520px;
     line-height: 1.65;
-    max-width: 620px;
-    margin-bottom: 2rem;
   }
 
-  .author-row {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+  .author-card {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    text-align: center;
+    min-width: 180px;
+    flex-shrink: 0;
   }
   .author-avatar {
-    width: 38px; height: 38px;
-    background: linear-gradient(135deg, #c84b11 0%, #8b2500 100%);
+    width: 52px; height: 52px;
+    background: linear-gradient(135deg, #c84b11 0%, #7a2800 100%);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-family: 'DM Serif Display', serif;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: white;
-    flex-shrink: 0;
+    margin: 0 auto 0.75rem;
   }
-  .author-info .name {
+  .author-card .name {
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--ink);
     line-height: 1.2;
+    margin-bottom: 0.25rem;
   }
-  .author-info .role {
-    font-size: 0.78rem;
+  .author-card .role {
+    font-size: 0.72rem;
     color: var(--ink-muted);
+    line-height: 1.4;
   }
-
-  /* ── STACK BADGE STRIP ── */
-  .stack-strip {
-    max-width: 780px;
-    margin: 0 auto;
-    padding: 1.5rem 2rem;
-    border-bottom: 1px solid var(--rule);
+  .author-links {
     display: flex;
     gap: 0.5rem;
-    flex-wrap: wrap;
-    align-items: center;
+    justify-content: center;
+    margin-top: 0.9rem;
   }
-  .stack-strip .label {
+  .author-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--ink-muted);
+    text-decoration: none;
+    border: 1px solid var(--rule);
+    padding: 0.25em 0.65em;
+    border-radius: 3px;
+    transition: all 0.2s;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .author-links a:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 1.25rem 2rem;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .filter-label {
     font-size: 0.72rem;
     font-weight: 600;
     color: var(--ink-muted);
@@ -176,356 +196,290 @@
     letter-spacing: 0.07em;
     margin-right: 0.25rem;
   }
-  .badge {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    padding: 0.25em 0.65em;
-    border-radius: 3px;
+  .filter-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
     font-weight: 500;
-    border: 1px solid transparent;
+    padding: 0.3em 0.85em;
+    border-radius: 3px;
+    border: 1px solid var(--rule);
+    background: transparent;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: all 0.18s;
+    letter-spacing: 0.02em;
   }
-  .badge.debian { background: #f2e5e8; color: #6e1a29; border-color: #e8c4ca; }
-  .badge.php { background: #ece8f5; color: #3a2a7a; border-color: #cdc3ec; }
-  .badge.mysql { background: #e3ecf8; color: #1a3d6e; border-color: #b8cfec; }
-  .badge.nginx { background: #e4f3e9; color: #1a5a32; border-color: #b8dec5; }
-  .badge.es { background: #e3eef8; color: #0a3d6e; border-color: #b0cfe8; }
-  .badge.redis { background: #fde8e8; color: #7a1a1a; border-color: #f5c0c0; }
-  .badge.varnish { background: #e8f2fb; color: #1a3a6a; border-color: #b8d0f0; }
+  .filter-btn:hover { border-color: var(--ink-mid); color: var(--ink); }
+  .filter-btn.active { background: var(--ink); color: white; border-color: var(--ink); }
 
-  /* ── BODY CONTENT ── */
-  .content {
-    max-width: 780px;
+  /* ── POST COUNT ── */
+  .posts-header {
+    max-width: 860px;
     margin: 0 auto;
-    padding: 3.5rem 2rem 5rem;
-  }
-
-  /* TOC */
-  .toc {
-    background: var(--bg-card);
-    border: 1px solid var(--rule);
-    border-left: 3px solid var(--accent);
-    border-radius: 0 6px 6px 0;
-    padding: 1.5rem 2rem;
-    margin-bottom: 3.5rem;
-  }
-  .toc-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 0.9rem;
-    font-weight: 400;
-    color: var(--ink-muted);
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-  }
-  .toc ol {
-    padding-left: 1.2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
-  .toc ol li { font-size: 0.9rem; }
-  .toc a {
-    color: var(--ink-mid);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-  .toc a:hover { color: var(--accent); }
-
-  /* Prose */
-  h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.7rem;
-    font-weight: 400;
-    letter-spacing: -0.015em;
-    color: var(--ink);
-    margin: 3rem 0 1rem;
-    line-height: 1.25;
-  }
-  h3 {
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--ink);
-    margin: 2rem 0 0.6rem;
-    letter-spacing: -0.01em;
-  }
-  p { margin-bottom: 1.3rem; color: var(--ink-mid); }
-  p strong { color: var(--ink); font-weight: 600; }
-
-  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-soft); transition: border-color 0.2s; }
-  a:hover { border-color: var(--accent); }
-
-  ul, ol {
-    padding-left: 1.4rem;
-    margin-bottom: 1.3rem;
-    color: var(--ink-mid);
-  }
-  li { margin-bottom: 0.35rem; }
-  li strong { color: var(--ink); }
-
-  hr {
-    border: none;
-    border-top: 1px solid var(--rule);
-    margin: 3rem 0;
-  }
-
-  /* Code */
-  code {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.82em;
-    background: var(--bg-code);
-    padding: 0.15em 0.4em;
-    border-radius: 3px;
-    color: var(--accent);
-  }
-  pre {
-    background: #1c1b18;
-    border-radius: 8px;
-    padding: 1.5rem;
-    overflow-x: auto;
-    margin: 1.5rem 0 2rem;
-    position: relative;
-  }
-  pre .lang-label {
-    position: absolute;
-    top: 0.6rem;
-    right: 0.9rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
-    color: #6a6a60;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-  pre code {
-    background: none;
-    padding: 0;
-    font-size: 0.82rem;
-    color: #d4cfbe;
-    line-height: 1.7;
-  }
-  .kw { color: #e07b4a; }
-  .cm { color: #6a7a60; font-style: italic; }
-  .str { color: #98c899; }
-  .fn { color: #7ab8d4; }
-  .num { color: #d4a46a; }
-
-  /* Pull quote */
-  .pullquote {
-    border-left: 3px solid var(--accent);
-    padding: 1rem 1.5rem;
-    margin: 2rem 0;
-    background: var(--accent-soft);
-    border-radius: 0 6px 6px 0;
-  }
-  .pullquote p {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.15rem;
-    font-style: italic;
-    color: var(--ink);
-    line-height: 1.5;
-    margin: 0;
-  }
-
-  /* Architecture box */
-  .arch-box {
-    background: #1c1b18;
-    border-radius: 8px;
-    padding: 1.5rem;
-    margin: 1.5rem 0 2rem;
-    overflow-x: auto;
-  }
-  .arch-box pre {
-    background: none;
-    border-radius: 0;
-    padding: 0;
-    margin: 0;
-  }
-  .arch-box pre code {
-    color: #a8d4b0;
-    font-size: 0.8rem;
-  }
-  .arch-box .comment-line { color: #6a7a60; }
-  .arch-box .arrow { color: #7ab8d4; }
-  .arch-box .label { color: #d4cfbe; }
-  .arch-box .service { color: #e07b4a; }
-
-  /* Decision table */
-  .decision-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1.5rem 0 2rem;
-    font-size: 0.9rem;
-  }
-  .decision-table th {
-    background: var(--ink);
-    color: white;
-    padding: 0.75rem 1rem;
-    text-align: left;
-    font-weight: 500;
-    font-size: 0.8rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-  .decision-table th:first-child { border-radius: 6px 0 0 0; }
-  .decision-table th:last-child { border-radius: 0 6px 0 0; }
-  .decision-table td {
-    padding: 0.8rem 1rem;
-    border-bottom: 1px solid var(--rule);
-    vertical-align: top;
-    color: var(--ink-mid);
-    line-height: 1.55;
-  }
-  .decision-table td:first-child {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
-    color: var(--accent);
-    font-weight: 500;
-    white-space: nowrap;
-  }
-  .decision-table tr:last-child td { border-bottom: none; }
-  .decision-table tr:nth-child(even) td { background: #faf8f4; }
-
-  /* Perf callout */
-  .perf-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    margin: 1.5rem 0 2rem;
-  }
-  .perf-card {
-    background: var(--bg-card);
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    padding: 1.25rem 1.5rem;
-  }
-  .perf-card .label {
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: var(--ink-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    margin-bottom: 0.5rem;
-  }
-  .perf-card .value {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2rem;
-    color: var(--ink);
-    line-height: 1;
-    margin-bottom: 0.3rem;
-  }
-  .perf-card .desc { font-size: 0.82rem; color: var(--ink-muted); }
-  .perf-card.highlight { border-color: var(--accent-2); }
-  .perf-card.highlight .value { color: var(--accent-2); }
-
-  /* Script cards */
-  .script-grid {
-    display: grid;
-    gap: 1rem;
-    margin: 1.5rem 0 2rem;
-  }
-  .script-card {
-    background: var(--bg-card);
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    padding: 1rem 1.25rem;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0 1rem;
-    align-items: start;
-  }
-  .script-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.5rem;
-    color: var(--accent);
-    line-height: 1;
-    padding-top: 0.1rem;
-  }
-  .script-title {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--ink);
-    margin-bottom: 0.3rem;
-    font-family: 'JetBrains Mono', monospace;
-  }
-  .script-desc { font-size: 0.85rem; color: var(--ink-muted); line-height: 1.55; }
-
-  /* Lessons */
-  .lesson {
-    background: var(--bg-card);
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    padding: 1.25rem 1.5rem;
-    margin-bottom: 1rem;
-    border-left: 3px solid var(--blue);
-  }
-  .lesson h4 {
-    font-size: 0.92rem;
-    font-weight: 600;
-    color: var(--ink);
-    margin-bottom: 0.4rem;
-  }
-  .lesson p { font-size: 0.88rem; margin: 0; }
-
-  /* Closing CTA */
-  .cta-box {
-    background: var(--ink);
-    color: white;
-    border-radius: 10px;
-    padding: 2.5rem;
-    text-align: center;
-    margin-top: 3.5rem;
-  }
-  .cta-box h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.5rem;
-    font-weight: 400;
-    color: white;
-    margin-bottom: 0.75rem;
-  }
-  .cta-box p { color: #b5b5ac; font-size: 0.95rem; margin-bottom: 1.5rem; }
-  .cta-links {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .cta-btn {
-    display: inline-block;
-    padding: 0.65rem 1.4rem;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-decoration: none;
-    border: none;
-    transition: opacity 0.2s;
-  }
-  .cta-btn:hover { opacity: 0.85; border-bottom: none; }
-  .cta-btn.primary { background: var(--accent); color: white; }
-  .cta-btn.secondary { background: #2a2a26; color: #d4cfbe; border: 1px solid #3a3a36; }
-
-  /* Footnote */
-  .footnote {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--rule);
-    font-size: 0.8rem;
-    color: var(--ink-muted);
+    padding: 2rem 2rem 1rem;
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    align-items: baseline;
+  }
+  .posts-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.04em;
+  }
+  .posts-count span { color: var(--ink); font-weight: 500; }
+
+  /* ── POST LIST ── */
+  .posts-list {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 2rem 5rem;
   }
 
-  @media (max-width: 600px) {
-    .perf-grid { grid-template-columns: 1fr; }
+  /* Featured post — first one, larger */
+  .post-card.featured {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 2rem 2.25rem;
+    margin-bottom: 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .post-card.featured::before {
+    content: 'Featured';
+    position: absolute;
+    top: 1.25rem;
+    right: 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: var(--accent-soft);
+    padding: 0.2em 0.6em;
+    border-radius: 2px;
+  }
+  .post-card.featured:hover {
+    border-color: var(--ink-mid);
+    transform: translateY(-2px);
+  }
+
+  /* Regular post card */
+  .post-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0 1.75rem;
+    align-items: start;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s;
+    border-radius: 6px;
+    margin: 0 -0.75rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  .post-card:hover { background: var(--bg-card); }
+  .post-card:last-child { border-bottom: none; }
+
+  /* Post number */
+  .post-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: var(--ink-faint);
+    line-height: 1;
+    padding-top: 0.15rem;
+    min-width: 2rem;
+    text-align: right;
+    transition: color 0.2s;
+  }
+  .post-card:hover .post-num { color: var(--accent); }
+
+  /* Post body */
+  .post-body {}
+
+  .post-tags {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.6rem;
+  }
+  .tag {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    padding: 0.25em 0.7em;
+    border-radius: 2px;
+  }
+  .tag.devops   { background: var(--accent-soft); color: var(--accent); }
+  .tag.infra    { background: var(--accent-2-soft); color: var(--accent-2); }
+  .tag.security { background: #fef3e2; color: #92520a; }
+  .tag.cloud    { background: var(--blue-soft); color: var(--blue); }
+  .tag.db       { background: #f0edf8; color: #4a2d8a; }
+  .tag.ci-cd    { background: #e8f5f0; color: #0d5c3a; }
+
+  .post-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+    transition: color 0.2s;
+  }
+  .post-card:hover .post-title { color: var(--accent); }
+  .post-card.featured .post-title { font-size: 1.5rem; }
+
+  .post-excerpt {
+    font-size: 0.88rem;
+    color: var(--ink-muted);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .post-meta .dot { width: 2px; height: 2px; background: var(--ink-faint); border-radius: 50%; }
+  .post-meta .read-time { color: var(--ink-muted); }
+
+  /* Arrow on list cards */
+  .post-arrow {
+    font-size: 1rem;
+    color: var(--ink-faint);
+    transition: all 0.2s;
+    padding-top: 0.25rem;
+    flex-shrink: 0;
+  }
+  .post-card:hover .post-arrow { color: var(--accent); transform: translate(3px, -1px); }
+
+  /* Featured card specific overrides */
+  .post-card.featured .post-body { grid-column: span 1; }
+  .post-card.featured .feat-visual {
+    background: var(--bg);
+    border-radius: 6px;
+    border: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+    gap: 0.75rem;
+  }
+  .feat-stat {
+    text-align: center;
+  }
+  .feat-stat .val {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: var(--accent-2);
+    line-height: 1;
+    margin-bottom: 0.2rem;
+  }
+  .feat-stat .lbl {
+    font-size: 0.7rem;
+    color: var(--ink-muted);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .feat-divider { width: 1px; height: 40px; background: var(--rule); }
+  .feat-visual-row { display: flex; align-items: center; gap: 0.75rem; }
+
+  /* Stack pills in featured */
+  .stack-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.5rem;
+  }
+  .pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.2em 0.55em;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    color: var(--ink-muted);
+    background: var(--bg);
+  }
+
+  /* ── COMING SOON CARD ── */
+  .post-card.coming-soon {
+    opacity: 0.45;
+    pointer-events: none;
+    cursor: default;
+  }
+  .post-card.coming-soon .post-arrow { display: none; }
+  .soon-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--ink-muted);
+    border: 1px dashed var(--rule);
+    padding: 0.2em 0.6em;
+    border-radius: 2px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding-top: 0.3rem;
+  }
+
+  /* ── FOOTER ── */
+  .site-footer {
+    border-top: 1px solid var(--rule);
+    padding: 2rem;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+  }
+  .site-footer a { color: var(--ink-muted); text-decoration: none; border-bottom: 1px solid var(--rule); transition: color 0.2s; }
+  .site-footer a:hover { color: var(--accent); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .page-intro   { animation: fadeUp 0.5s ease both; }
+  .filter-bar   { animation: fadeUp 0.5s 0.1s ease both; }
+  .posts-header { animation: fadeUp 0.5s 0.15s ease both; }
+  .post-card.featured { animation: fadeUp 0.5s 0.2s ease both; }
+  .post-card:nth-child(2) { animation: fadeUp 0.5s 0.25s ease both; }
+  .post-card:nth-child(3) { animation: fadeUp 0.5s 0.3s ease both; }
+  .post-card:nth-child(4) { animation: fadeUp 0.5s 0.35s ease both; }
+  .post-card:nth-child(5) { animation: fadeUp 0.5s 0.4s ease both; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 680px) {
+    .page-intro { grid-template-columns: 1fr; }
+    .author-card { display: none; }
+    .post-card.featured { grid-template-columns: 1fr; }
+    .feat-visual { display: none; }
     .site-header nav { display: none; }
-    h2 { font-size: 1.4rem; }
+    .post-num { font-size: 1.4rem; min-width: 1.6rem; }
   }
 </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <header class="site-header">
-  <a class="logo" href="#">Asit Minz</a>
+  <a class="logo" href="/">Asit Minz</a>
   <nav>
     <a href="https://github.com/Asit0007" target="_blank">GitHub</a>
     <a href="https://linkedin.com/in/" target="_blank">LinkedIn</a>
@@ -533,325 +487,157 @@
   </nav>
 </header>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-meta">
-    <span class="tag">DevOps</span>
-    <span class="tag green">Infrastructure</span>
-    <span class="tag blue">Case Study</span>
-    <span class="dot"></span>
-    <time datetime="2026-04-01">April 2026</time>
-    <span class="dot"></span>
-    <span class="read-time">12 min read</span>
+<!-- PAGE INTRO -->
+<section class="page-intro">
+  <div>
+    <div class="intro-eyebrow">Engineering Blog</div>
+    <h1 class="page-title">
+      Infrastructure.<br>
+      Systems. <em>Real-world</em><br>
+      problem solving.
+    </h1>
+    <p class="page-desc">
+      Deep-dives into DevOps, cloud infrastructure, and backend engineering — written from production experience, not tutorials.
+    </p>
   </div>
-
-  <h1 class="hero-title">
-    From Bare Server to Production<br>
-    <em>Magento Stack</em> in 7 Scripts
-  </h1>
-
-  <p class="hero-sub">
-    A deep-dive into engineering a multi-layer, production-grade Magento 2 deployment — covering architecture decisions, service topology, caching strategy, and everything that broke along the way.
-  </p>
-
-  <div class="author-row">
+  <div class="author-card">
     <div class="author-avatar">AM</div>
-    <div class="author-info">
-      <div class="name">Asit Minz</div>
-      <div class="role">Infrastructure &amp; Backend Engineering</div>
+    <div class="name">Asit Minz</div>
+    <div class="role">Infrastructure &amp; Backend Engineering</div>
+    <div class="author-links">
+      <a href="https://github.com/Asit0007" target="_blank">GitHub</a>
+      <a href="mailto:asitminz007@gmail.com">Email</a>
     </div>
   </div>
 </section>
 
-<!-- STACK BADGES -->
-<div class="stack-strip">
-  <span class="label">Stack:</span>
-  <span class="badge debian">Debian 12</span>
-  <span class="badge php">PHP 8.2-FPM</span>
-  <span class="badge mysql">MySQL 8.0</span>
-  <span class="badge nginx">Nginx</span>
-  <span class="badge es">Elasticsearch 7</span>
-  <span class="badge redis">Redis</span>
-  <span class="badge varnish">Varnish 7</span>
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <span class="filter-label">Filter:</span>
+  <button class="filter-btn active" onclick="filterPosts('all', this)">All</button>
+  <button class="filter-btn" onclick="filterPosts('devops', this)">DevOps</button>
+  <button class="filter-btn" onclick="filterPosts('infra', this)">Infrastructure</button>
+  <button class="filter-btn" onclick="filterPosts('cloud', this)">Cloud</button>
+  <button class="filter-btn" onclick="filterPosts('security', this)">Security</button>
 </div>
 
-<!-- CONTENT -->
-<main class="content">
+<!-- POSTS HEADER -->
+<div class="posts-header">
+  <span class="posts-count"><span id="visible-count">1</span> article published</span>
+</div>
 
-  <div class="toc">
-    <div class="toc-title">In this article</div>
-    <ol>
-      <li><a href="#problem">The Engineering Problem</a></li>
-      <li><a href="#architecture">Architecture &amp; Design Decisions</a></li>
-      <li><a href="#scripts">The 7-Script Automation System</a></li>
-      <li><a href="#performance">Performance Results</a></li>
-      <li><a href="#lessons">What I Learned — 6 Hard Lessons</a></li>
-      <li><a href="#future">Future Roadmap</a></li>
-    </ol>
-  </div>
+<!-- POSTS LIST -->
+<main class="posts-list" id="posts-container">
 
-  <!-- INTRO -->
-  <p>
-    Magento 2 is one of the most infrastructure-demanding open-source platforms in existence. It doesn't run on a LAMP stack — it <em>requires</em> a specific PHP version with roughly 15 extensions, a dedicated search engine (MySQL search was dropped in 2.4.x entirely), in-memory session management to survive PHP-FPM restarts, and a full-page cache layer to be remotely usable under real traffic. A manual setup takes 4–6 hours and produces a result that's almost impossible to reproduce accurately.
-  </p>
-
-  <p>
-    <strong>Magento_DeployKit</strong> is my answer to that problem: seven ordered shell scripts that take a fresh Debian 12 VPS to a fully operational, production-hardened Magento 2.4.8 stack with a single sequential run. This post documents the engineering decisions behind it, the problems I hit, and the measurable results.
-  </p>
-
-  <div class="pullquote">
-    <p>"A manual install takes 4–6 hours and produces a result that's hard to reproduce. This project reduces that to a single sequential run with predictable outcomes."</p>
-  </div>
-
-  <!-- PROBLEM -->
-  <h2 id="problem">The Engineering Problem</h2>
-
-  <p>
-    Before writing a single line of shell script, I scoped the full dependency chain Magento 2.4.x actually requires — not what the quickstart guide suggests:
-  </p>
-
-  <ul>
-    <li><strong>PHP 8.2-FPM</strong> with ~15 specific extensions (bcmath, gd, intl, soap, xsl, zip, and more)</li>
-    <li><strong>Composer 2.x</strong> with authenticated access to the Magento Marketplace private repository</li>
-    <li><strong>MySQL 8.0</strong> with a correctly privileged app user, a separate read-only user, and <code>log_bin_trust_function_creators=1</code></li>
-    <li><strong>Elasticsearch 7.x</strong> — not 8.x, which Magento 2.4.x is not compatible with — with JVM heap tuning and OS-level file descriptor limits</li>
-    <li><strong>Redis</strong> for both session storage and object cache — two separate Redis databases</li>
-    <li><strong>Varnish 7</strong> as the full-page cache layer fronting Nginx on port 80</li>
-    <li><strong>Nginx</strong> handling both SSL termination (port 443) and as Varnish's backend (port 8080)</li>
-    <li><strong>2 GB swap</strong> to absorb Composer and DI compilation memory spikes on a 4 GB server</li>
-  </ul>
-
-  <p>
-    Every service has its own installation quirks, configuration surface, and failure mode. Automating all of it idempotently — so scripts can be re-run safely — required understanding each service at the level of what breaks when it's slightly wrong, not just how to install it when everything goes right.
-  </p>
-
-  <!-- ARCHITECTURE -->
-  <h2 id="architecture">Architecture &amp; Design Decisions</h2>
-
-  <p>The request path is the foundation of the whole topology. Mapping it explicitly before writing config was what made the port layout make sense:</p>
-
-  <div class="arch-box">
-    <pre><code><span class="comment-line"># HTTP request path (port 80)</span>
-<span class="label">Browser</span>
-  <span class="arrow">│</span>
-  <span class="arrow">└─[HTTP :80]──→</span> <span class="service">Varnish</span> <span class="comment-line">(full-page cache)</span>
-                    <span class="arrow">└─[cache miss]──→</span> <span class="service">Nginx :8080</span> <span class="arrow">──→</span> <span class="service">PHP-FPM</span> <span class="arrow">──→</span> <span class="service">Magento 2</span>
-
-<span class="comment-line"># HTTPS request path (port 443)</span>
-<span class="label">Browser</span>
-  <span class="arrow">│</span>
-  <span class="arrow">└─[HTTPS :443]─→</span> <span class="service">Nginx</span> <span class="comment-line">(SSL termination)</span> <span class="arrow">──→</span> <span class="service">PHP-FPM</span> <span class="arrow">──→</span> <span class="service">Magento 2</span>
-                                               <span class="arrow">├──→</span> <span class="service">MySQL 8</span>         <span class="comment-line">(persistent data)</span>
-                                               <span class="arrow">├──→</span> <span class="service">Elasticsearch 7</span> <span class="comment-line">(catalog search)</span>
-                                               <span class="arrow">├──→</span> <span class="service">Redis</span>           <span class="comment-line">(sessions + object cache)</span>
-                                               <span class="arrow">└──→</span> <span class="service">Filesystem</span>      <span class="comment-line">(static assets)</span></code></pre>
-  </div>
-
-  <p>Each key decision in this topology has a concrete reason:</p>
-
-  <table class="decision-table">
-    <thead>
-      <tr>
-        <th>Decision</th>
-        <th>Rationale</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Varnish :80, Nginx :8080</td>
-        <td>Varnish cannot handle TLS. NGINX terminates SSL on 443 independently. Port 8080 is the backend Varnish proxies to on cache miss — clean separation of concerns, no port conflicts.</td>
-      </tr>
-      <tr>
-        <td>Dedicated PHP-FPM pool</td>
-        <td>Running a named pool under the web user's UID means socket permissions align without chmod workarounds. Process limits are scoped to Magento, not shared with other apps.</td>
-      </tr>
-      <tr>
-        <td>Elasticsearch over MySQL search</td>
-        <td>Magento 2.4+ dropped built-in MySQL catalog search. ES 7.x is the minimum supported version and provides proper tokenisation, relevance scoring, and horizontal scalability.</td>
-      </tr>
-      <tr>
-        <td>Redis for sessions</td>
-        <td>PHP file sessions don't survive PHP-FPM process recycling cleanly. Redis provides atomic session writes and persists across restarts — no cart loss under normal operations.</td>
-      </tr>
-      <tr>
-        <td>2 GB swap on 4 GB RAM</td>
-        <td>Composer's dependency resolution and <code>setup:di:compile</code> are memory spikes, not sustained usage. Swap prevents OOM kills during install without requiring a larger droplet.</td>
-      </tr>
-      <tr>
-        <td>Dedicated MySQL users (app + read-only)</td>
-        <td>Principle of least privilege. The app user has only the permissions Magento needs. A separate read-only user is safe to expose to phpMyAdmin and external tooling without access risk.</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- SCRIPTS -->
-  <h2 id="scripts">The 7-Script Automation System</h2>
-
-  <p>
-    The system is structured as seven ordered, idempotent shell scripts. Running them out of order will fail — by design. Each script has a defined responsibility and hands off a clean state to the next.
-  </p>
-
-  <div class="script-grid">
-    <div class="script-card">
-      <div class="script-num">01</div>
-      <div>
-        <div class="script-title">01-System-Prep.sh</div>
-        <div class="script-desc">Creates a 2 GB swap file (critical for Composer and DI compilation on constrained RAM), sets <code>nproc 4096</code> process limits for the web user, imports GPG keys for MySQL and Elasticsearch apt repositories, and installs base utilities.</div>
+  <!-- POST 1 — FEATURED (your current post) -->
+  <a class="post-card featured" href="/posts/magento-deploykit/" data-tags="devops infra">
+    <div class="post-body">
+      <div class="post-tags">
+        <span class="tag devops">DevOps</span>
+        <span class="tag infra">Infrastructure</span>
+      </div>
+      <div class="post-title">From Bare Server to Production Magento Stack in 7 Scripts</div>
+      <div class="post-excerpt">
+        A deep-dive into engineering a multi-layer Magento 2.4.8 deployment on Debian 12 — Varnish, Nginx, PHP-FPM, MySQL, Elasticsearch, and Redis, fully automated with idempotent shell scripts.
+      </div>
+      <div class="stack-pills">
+        <span class="pill">Debian 12</span>
+        <span class="pill">PHP 8.2-FPM</span>
+        <span class="pill">Varnish 7</span>
+        <span class="pill">Elasticsearch</span>
+        <span class="pill">Redis</span>
+      </div>
+      <div class="post-meta" style="margin-top: 1rem;">
+        <span>April 2026</span>
+        <span class="dot"></span>
+        <span class="read-time">12 min read</span>
       </div>
     </div>
-    <div class="script-card">
-      <div class="script-num">02</div>
-      <div>
-        <div class="script-title">02-PHP-MySQL-Installation.sh</div>
-        <div class="script-desc">Installs PHP 8.2-FPM with all Magento-required extensions. Installs Composer with checksum validation. Sets up MySQL 8.0, creates the Magento database, an app-level DB user, and a read-only DB user for safer external access.</div>
+    <div class="feat-visual">
+      <div class="feat-visual-row">
+        <div class="feat-stat">
+          <div class="val">97%</div>
+          <div class="lbl">Cache reduction</div>
+        </div>
+        <div class="feat-divider"></div>
+        <div class="feat-stat">
+          <div class="val">7</div>
+          <div class="lbl">Shell scripts</div>
+        </div>
+      </div>
+      <div class="feat-stat" style="margin-top: 0.5rem;">
+        <div class="val" style="font-size: 1.3rem; color: var(--ink-mid);">3.0MB → 77kB</div>
+        <div class="lbl">Varnish cache impact</div>
       </div>
     </div>
-    <div class="script-card">
-      <div class="script-num">03</div>
-      <div>
-        <div class="script-title">03-NGINX-Composer-Setup.sh</div>
-        <div class="script-desc">Installs NGINX configured to run under the web user. Sets up <code>auth.json</code> with Magento Marketplace credentials so <code>composer install</code> can pull proprietary packages without interactive prompts.</div>
+  </a>
+
+  <!-- COMING SOON PLACEHOLDERS — replace these as you write new posts -->
+
+  <a class="post-card coming-soon" href="#" data-tags="cloud infra">
+    <div class="post-num">02</div>
+    <div class="post-body">
+      <div class="post-tags">
+        <span class="tag cloud">Cloud</span>
+        <span class="tag infra">Infrastructure</span>
+      </div>
+      <div class="post-title">Your next post title goes here</div>
+      <div class="post-excerpt">A short description of what this post covers — add this when you publish.</div>
+      <div class="post-meta">
+        <span>Coming soon</span>
       </div>
     </div>
-    <div class="script-card">
-      <div class="script-num">04</div>
-      <div>
-        <div class="script-title">04-Elasticsearch-Redis-Installation.sh</div>
-        <div class="script-desc">Installs Elasticsearch 7.x from the official Elastic apt repository. Configures JVM heap (2 GB), <code>vm.max_map_count=262144</code>, and file descriptor limits — all required for ES to start cleanly on a constrained server. Installs Redis for sessions and object cache.</div>
+    <span class="soon-badge">Coming soon</span>
+  </a>
+
+  <a class="post-card coming-soon" href="#" data-tags="devops ci-cd">
+    <div class="post-num">03</div>
+    <div class="post-body">
+      <div class="post-tags">
+        <span class="tag devops">DevOps</span>
+        <span class="tag ci-cd">CI/CD</span>
+      </div>
+      <div class="post-title">Your next post title goes here</div>
+      <div class="post-excerpt">A short description of what this post covers — add this when you publish.</div>
+      <div class="post-meta">
+        <span>Coming soon</span>
       </div>
     </div>
-    <div class="script-card">
-      <div class="script-num">05</div>
-      <div>
-        <div class="script-title">05-Magento-Installation.sh</div>
-        <div class="script-desc">Runs <code>bin/magento setup:install</code> with full DB, search, cache, and admin configuration. Deploys static content, reindexes all indexers, and sets correct permissions on <code>var/</code>, <code>pub/</code>, and <code>app/etc/</code>.</div>
-      </div>
-    </div>
-    <div class="script-card">
-      <div class="script-num">06</div>
-      <div>
-        <div class="script-title">06-Web-Server-Config.sh</div>
-        <div class="script-desc">Creates a dedicated PHP-FPM pool with a named socket. Writes NGINX site configs for Magento (port 8080) and phpMyAdmin. Generates a self-signed SSL certificate. Installs and configures Varnish to front NGINX on port 80.</div>
-      </div>
-    </div>
-    <div class="script-card">
-      <div class="script-num">07</div>
-      <div>
-        <div class="script-title">07-Final-Config-Checks.sh</div>
-        <div class="script-desc">Sets final file ownership (2755/644), creates a read-only Linux user with ACL access for safe file inspection, persists <code>log_bin_trust_function_creators=1</code> in MySQL config, configures Magento FPC via Varnish, and prints a full health-check summary across all services.</div>
-      </div>
-    </div>
-  </div>
-
-  <h3>Key shell patterns used throughout</h3>
-
-  <p>The scripts aren't just sequences of <code>apt install</code> calls. Several patterns make them production-appropriate:</p>
-
-  <pre><span class="lang-label">bash</span><code><span class="cm"># Idempotency: check before creating</span>
-<span class="kw">if</span> [ ! -f /swapfile ]; <span class="kw">then</span>
-  <span class="fn">fallocate</span> -l 2G /swapfile
-  <span class="fn">chmod</span> 600 /swapfile
-  <span class="fn">mkswap</span> /swapfile
-  <span class="fn">swapon</span> /swapfile
-  <span class="fn">echo</span> <span class="str">'/swapfile none swap sw 0 0'</span> >> /etc/fstab
-<span class="kw">fi</span>
-
-<span class="cm"># Checksum validation before installing Composer</span>
-<span class="fn">php</span> -r <span class="str">"if (hash_file('sha384', 'composer-setup.php') === '<span class="num">EXPECTED_HASH</span>') {</span>
-<span class="str">  echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); }"</span>
-
-<span class="cm"># Scoped process limits for the web user</span>
-<span class="fn">echo</span> <span class="str">"test-ssh  soft  nproc  4096"</span> >> /etc/security/limits.conf
-<span class="fn">echo</span> <span class="str">"test-ssh  hard  nproc  4096"</span> >> /etc/security/limits.conf</code></pre>
-
-  <!-- PERFORMANCE -->
-  <h2 id="performance">Performance Results</h2>
-
-  <p>
-    The Varnish full-page cache impact is the most direct validation that the multi-layer architecture is working correctly. Measured on a catalog search result page using browser DevTools:
-  </p>
-
-  <div class="perf-grid">
-    <div class="perf-card">
-      <div class="label">Cold cache — full stack round trip</div>
-      <div class="value">3.0 MB</div>
-      <div class="desc">Data transferred — PHP, MySQL, Elasticsearch all executed — 1.60s to finish</div>
-    </div>
-    <div class="perf-card highlight">
-      <div class="label">Warm cache — served from Varnish memory</div>
-      <div class="value">77.4 kB</div>
-      <div class="desc"><strong>~97% less data transferred</strong> — 910ms to finish. PHP, MySQL, ES never touched.</div>
-    </div>
-  </div>
-
-  <p>
-    The 97% data reduction isn't a tuning win — it's proof the architecture is correctly configured. The Varnish VCL is correctly hashing cache keys, PHP-FPM is correctly sending <code>X-Magento-Cache-Control</code> headers, and the Nginx backend is correctly proxying cache-miss requests. All three services talking to each other correctly is the real measurement here.
-  </p>
-
-  <!-- LESSONS -->
-  <h2 id="lessons">What I Learned — 6 Hard Lessons</h2>
-
-  <p>These aren't retrospective observations — each one is something that caused a real failure during the build and forced a deeper understanding of the underlying system.</p>
-
-  <div class="lesson">
-    <h4>1. Varnish and TLS fundamentally cannot coexist on the same port</h4>
-    <p>Varnish has no TLS support — it proxies plain HTTP only. The solution required a deliberate two-frontend design: NGINX terminates SSL on 443, Varnish owns port 80, and NGINX listens on 8080 as Varnish's backend. Getting this topology right required tracing the full request path on paper before writing a single config line. Starting from configs and hoping they'd work together would have taken days.</p>
-  </div>
-
-  <div class="lesson">
-    <h4>2. PHP-FPM socket permissions aren't automatic — and silent 502s are the symptom</h4>
-    <p>A generic <code>www</code> pool running under a different UID than NGINX's worker process causes 502 Bad Gateway errors with no obvious log entry on the PHP side. The fix — a dedicated named pool under the same user as the web root — taught me how FastCGI socket ownership actually works at the kernel level, not just the symptom level.</p>
-  </div>
-
-  <div class="lesson">
-    <h4>3. Elasticsearch 7 on 4 GB RAM needs explicit OS-level preparation</h4>
-    <p>Elasticsearch silently refuses to start if <code>vm.max_map_count</code> is below 262144. It also requires at least 65535 open file descriptors per process. Neither limit is set correctly on a default Debian install. Getting ES to start reliably required adding these to <code>/etc/sysctl.conf</code> and <code>/etc/security/limits.conf</code> before the service is ever started — settings that aren't in the Magento install docs at all.</p>
-  </div>
-
-  <div class="lesson">
-    <h4>4. Swap matters more than RAM for install-time stability</h4>
-    <p>Composer's dependency resolution and <code>setup:di:compile</code> both spike memory briefly — they're not sustained workloads. Adding a 2 GB swap file prevented two separate OOM kills during the initial install without requiring a larger (more expensive) droplet. The lesson: understand the <em>shape</em> of memory usage, not just the peak.</p>
-  </div>
-
-  <div class="lesson">
-    <h4>5. <code>git rm --cached</code> is the real <code>.gitignore</code> fix</h4>
-    <p>Adding a file to <code>.gitignore</code> does nothing if the file is already tracked in the index. Discovering this after committing <code>.DS_Store</code> and a config file containing credentials made the distinction between Git's index and the working tree concrete — something that reading about it never quite did.</p>
-  </div>
-
-  <div class="lesson">
-    <h4>6. Redis session writes protect against a real failure mode</h4>
-    <p>File-based PHP sessions can be wiped when PHP-FPM is restarted or the process tree is recycled under load. Redis-backed sessions are atomic and process-independent. I only fully understood why this mattered after tracing a cart-loss scenario: a user's session was in a file that PHP-FPM had an exclusive lock on during a restart. The file wasn't corrupted — it just wasn't accessible for the duration. Redis removes that entire class of failure.</p>
-  </div>
-
-  <!-- FUTURE -->
-  <h2 id="future">Future Roadmap</h2>
-
-  <p>The current state is a solid production baseline, but several things would make it genuinely enterprise-grade:</p>
-
-  <ul>
-    <li><strong>Let's Encrypt via Certbot</strong> — replace the self-signed certificate with automated renewal. The topology is already correct for this; it's purely a configuration change.</li>
-    <li><strong>Export Magento's VCL from the admin panel</strong> — Magento can generate a Varnish VCL file that's fully aware of its cache control logic. Applying this instead of a generic VCL would make cache hit rates significantly higher.</li>
-    <li><strong>Centralise all variables into <code>00-vars.sh</code></strong> — currently each script has variables at the top. A single sourced config file would be the right abstraction for team use.</li>
-    <li><strong>CI/CD pipeline with zero-downtime deploys</strong> — using a blue-green deployment pattern with Nginx upstream switching for Magento upgrades without downtime.</li>
-    <li><strong>Secrets management</strong> — HashiCorp Vault or Ansible Vault to eliminate hardcoded credentials entirely, even from the <code>00-vars.sh</code> approach.</li>
-  </ul>
-
-  <hr>
-
-  <div class="cta-box">
-    <h3>View the full project on GitHub</h3>
-    <p>All 7 scripts, the NGINX config, architecture diagram, and a documented errors guide are in the repository.</p>
-    <div class="cta-links">
-      <a class="cta-btn primary" href="https://github.com/Asit0007/Magento_DeployKit" target="_blank">GitHub — Magento_DeployKit</a>
-      <a class="cta-btn secondary" href="mailto:asitminz007@gmail.com">Get in touch</a>
-    </div>
-  </div>
-
-  <div class="footnote">
-    <span>Built on DigitalOcean BLR1 · Debian 12 · 2 vCPU / 4 GB RAM</span>
-    <span>Asit Minz · <a href="mailto:asitminz007@gmail.com">asitminz007@gmail.com</a></span>
-  </div>
+    <span class="soon-badge">Coming soon</span>
+  </a>
 
 </main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>
+    Built by <a href="https://github.com/Asit0007" target="_blank">Asit Minz</a> · 
+    Hosted on GitHub Pages · 
+    <a href="mailto:asitminz007@gmail.com">asitminz007@gmail.com</a>
+  </p>
+</footer>
+
+<script>
+  function filterPosts(tag, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const cards = document.querySelectorAll('.posts-list .post-card:not(.coming-soon)');
+    let visible = 0;
+
+    cards.forEach(card => {
+      const tags = card.dataset.tags || '';
+      const show = tag === 'all' || tags.includes(tag);
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    const countEl = document.getElementById('visible-count');
+    countEl.textContent = visible;
+    document.querySelector('.posts-count').lastChild.textContent =
+      visible === 1 ? ' article published' : ' articles published';
+  }
+</script>
+
 </body>
 </html>
