@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -516,8 +515,47 @@
     gap: 0.5rem;
   }
 
+  /* ── SCREENSHOTS ── */
+  .screenshot {
+    margin: 2rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+  }
+  .screenshot img {
+    width: 100%;
+    display: block;
+  }
+  .screenshot figcaption {
+    background: var(--bg-card);
+    border-top: 1px solid var(--rule);
+    padding: 0.65rem 1rem;
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    font-family: 'JetBrains Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .screenshot figcaption::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .screenshot-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  .screenshot-pair .screenshot { margin: 0; }
+
   @media (max-width: 600px) {
     .perf-grid { grid-template-columns: 1fr; }
+    .screenshot-pair { grid-template-columns: 1fr; }
     .site-header nav { display: none; }
     h2 { font-size: 1.4rem; }
   }
@@ -530,7 +568,7 @@
   <nav>
     <a href="https://github.com/Asit0007" target="_blank">GitHub</a>
     <a href="https://linkedin.com/in/" target="_blank">LinkedIn</a>
-    <a href="mailto:asitminz007@gmail.com">Contact</a>
+    <a href="/cdn-cgi/l/email-protection#b5d4c6dcc1d8dcdbcf858582f5d2d8d4dcd99bd6dad8">Contact</a>
   </nav>
 </header>
 
@@ -631,6 +669,11 @@
 
   <p>The request path is the foundation of the whole topology. Mapping it explicitly before writing config was what made the port layout make sense:</p>
 
+  <figure class="screenshot">
+    <img src="/assets/images/magento-deploykit/architecture-diagram.svg" alt="Magento 2 stack architecture diagram showing request flow through Varnish, Nginx, PHP-FPM, MySQL, Elasticsearch and Redis">
+    <figcaption>Full stack topology — Varnish on :80, Nginx SSL termination on :443, Nginx backend on :8080, PHP-FPM, and all backend services</figcaption>
+  </figure>
+
   <div class="arch-box">
     <pre><code><span class="comment-line"># HTTP request path (port 80)</span>
 <span class="label">Browser</span>
@@ -684,6 +727,11 @@
       </tr>
     </tbody>
   </table>
+
+  <figure class="screenshot">
+    <img src="/assets/images/magento-deploykit/04-admin-cache-management.png" alt="Magento admin cache management panel showing all 15 cache types enabled including FPC">
+    <figcaption>Magento admin → Cache Management — all 15 cache types enabled, FPC (Full Page Cache) active and backed by Varnish</figcaption>
+  </figure>
 
   <!-- SCRIPTS -->
   <h2 id="scripts">The 7-Script Automation System</h2>
@@ -785,9 +833,25 @@
     </div>
   </div>
 
+  <div class="screenshot-pair">
+    <figure class="screenshot">
+      <img src="/assets/images/magento-deploykit/05-search-uncached-devtools.png" alt="Browser DevTools network tab showing cold cache request — 3.0 MB transferred in 1.60s">
+      <figcaption>Cold cache — 3.0 MB transferred, 1.60s finish. Full PHP → MySQL → ES round trip.</figcaption>
+    </figure>
+    <figure class="screenshot">
+      <img src="/assets/images/magento-deploykit/06-search-cached-devtools.png" alt="Browser DevTools network tab showing warm cache request — 77.4 kB transferred in 910ms">
+      <figcaption>Warm cache — 77.4 kB transferred, 910ms finish. Served entirely from Varnish memory.</figcaption>
+    </figure>
+  </div>
+
   <p>
     The 97% data reduction isn't a tuning win — it's proof the architecture is correctly configured. The Varnish VCL is correctly hashing cache keys, PHP-FPM is correctly sending <code>X-Magento-Cache-Control</code> headers, and the Nginx backend is correctly proxying cache-miss requests. All three services talking to each other correctly is the real measurement here.
   </p>
+
+  <figure class="screenshot">
+    <img src="/assets/images/magento-deploykit/08-digitalocean-droplet.png" alt="DigitalOcean droplet dashboard showing debian-s-2vcpu-4gb-blr1-01 with 4GB RAM and 80GB disk">
+    <figcaption>The actual server — 2 vCPU / 4 GB RAM / 80 GB, DigitalOcean BLR1 (Bangalore). The 2 GB swap file was essential to survive Composer and DI compilation on this spec.</figcaption>
+  </figure>
 
   <!-- LESSONS -->
   <h2 id="lessons">What I Learned — 6 Hard Lessons</h2>
@@ -844,15 +908,10 @@
     <p>All 7 scripts, the NGINX config, architecture diagram, and a documented errors guide are in the repository.</p>
     <div class="cta-links">
       <a class="cta-btn primary" href="https://github.com/Asit0007/Magento_DeployKit" target="_blank">GitHub — Magento_DeployKit</a>
-      <a class="cta-btn secondary" href="mailto:asitminz007@gmail.com">Get in touch</a>
+      <a class="cta-btn secondary" href="/cdn-cgi/l/email-protection#bedfcdd7cad3d7d0c48e8e89fed9d3dfd7d290ddd1d3">Get in touch</a>
     </div>
   </div>
 
   <div class="footnote">
     <span>Built on DigitalOcean BLR1 · Debian 12 · 2 vCPU / 4 GB RAM</span>
-    <span>Asit Minz · <a href="mailto:asitminz007@gmail.com">asitminz007@gmail.com</a></span>
-  </div>
-
-</main>
-</body>
-</html>
+    <span>Asit Minz · <a href="/cdn-cgi/
