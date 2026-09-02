@@ -523,14 +523,58 @@
 
 <!-- POSTS HEADER -->
 <div class="posts-header">
-  <span class="posts-count"><span id="visible-count">1</span> article published</span>
+  <span class="posts-count"><span id="visible-count">2</span> articles published</span>
 </div>
 
 <!-- POSTS LIST -->
 <main class="posts-list" id="posts-container">
 
-  <!-- POST 1 — FEATURED (your current post) -->
-  <a class="post-card featured" href="/posts/magento-deploykit/" data-tags="devops infra">
+  <!-- POST 1 — FEATURED -->
+  <a class="post-card featured" href="/posts/cloudpulse-audit/" data-tags="cloud security devops">
+    <div class="post-body">
+      <div class="post-tags">
+        <span class="tag cloud">Cloud</span>
+        <span class="tag security">Security</span>
+      </div>
+      <div class="post-title">Three Ways My $0 AWS Dashboard Lied to Me</div>
+      <div class="post-excerpt">
+        I built CloudPulse so AWS Free Tier could never surprise me. Fifteen months later I audited all 456 lines against the live account — and found the docs described a system that never existed, the dashboard measured the calendar, and a live access key had been sitting in a plaintext file the whole time.
+      </div>
+      <div class="stack-pills">
+        <span class="pill">Go 1.25</span>
+        <span class="pill">Terraform</span>
+        <span class="pill">HashiCorp Vault</span>
+        <span class="pill">AWS EC2</span>
+        <span class="pill">GitHub Actions</span>
+      </div>
+      <div class="post-meta" style="margin-top: 1rem;">
+        <span>September 2026</span>
+        <span class="dot"></span>
+        <span class="read-time">16 min read</span>
+      </div>
+    </div>
+    <div class="feat-visual">
+      <div class="feat-visual-row">
+        <div class="feat-stat">
+          <div class="val">456</div>
+          <div class="lbl">Lines audited</div>
+        </div>
+        <div class="feat-divider"></div>
+        <div class="feat-stat">
+          <div class="val" style="color: var(--accent);">3</div>
+          <div class="lbl">Load-bearing lies</div>
+        </div>
+      </div>
+      <div class="feat-stat" style="margin-top: 0.5rem;">
+        <div class="val" style="font-size: 1.3rem; color: var(--ink-mid);">$0.00 spent</div>
+        <div class="lbl">Total AWS cost</div>
+      </div>
+    </div>
+  </a>
+
+  <!-- POST 2 -->
+  <a class="post-card" href="/posts/magento-deploykit/" data-tags="devops infra">
+    <div class="post-num">02</div>
     <div class="post-body">
       <div class="post-tags">
         <span class="tag devops">DevOps</span>
@@ -540,55 +584,16 @@
       <div class="post-excerpt">
         A deep-dive into engineering a multi-layer Magento 2.4.8 deployment on Debian 12 — Varnish, Nginx, PHP-FPM, MySQL, Elasticsearch, and Redis, fully automated with idempotent shell scripts.
       </div>
-      <div class="stack-pills">
-        <span class="pill">Debian 12</span>
-        <span class="pill">PHP 8.2-FPM</span>
-        <span class="pill">Varnish 7</span>
-        <span class="pill">Elasticsearch</span>
-        <span class="pill">Redis</span>
-      </div>
-      <div class="post-meta" style="margin-top: 1rem;">
+      <div class="post-meta">
         <span>April 2026</span>
         <span class="dot"></span>
         <span class="read-time">12 min read</span>
       </div>
     </div>
-    <div class="feat-visual">
-      <div class="feat-visual-row">
-        <div class="feat-stat">
-          <div class="val">97%</div>
-          <div class="lbl">Cache reduction</div>
-        </div>
-        <div class="feat-divider"></div>
-        <div class="feat-stat">
-          <div class="val">7</div>
-          <div class="lbl">Shell scripts</div>
-        </div>
-      </div>
-      <div class="feat-stat" style="margin-top: 0.5rem;">
-        <div class="val" style="font-size: 1.3rem; color: var(--ink-mid);">3.0MB → 77kB</div>
-        <div class="lbl">Varnish cache impact</div>
-      </div>
-    </div>
+    <span class="post-arrow">&rarr;</span>
   </a>
 
   <!-- COMING SOON PLACEHOLDERS — replace these as you write new posts -->
-
-  <a class="post-card coming-soon" href="#" data-tags="cloud infra">
-    <div class="post-num">02</div>
-    <div class="post-body">
-      <div class="post-tags">
-        <span class="tag cloud">Cloud</span>
-        <span class="tag infra">Infrastructure</span>
-      </div>
-      <div class="post-title">Your next post title goes here</div>
-      <div class="post-excerpt">A short description of what this post covers — add this when you publish.</div>
-      <div class="post-meta">
-        <span>Coming soon</span>
-      </div>
-    </div>
-    <span class="soon-badge">Coming soon</span>
-  </a>
 
   <a class="post-card coming-soon" href="#" data-tags="devops ci-cd">
     <div class="post-num">03</div>
