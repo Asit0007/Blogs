@@ -530,44 +530,37 @@
 <main class="posts-list" id="posts-container">
 
   <!-- POST 1 — FEATURED -->
-  <a class="post-card featured" href="/posts/cloudpulse-audit/" data-tags="cloud security devops">
+  <a class="post-card featured" href="/posts/cloudpulse/" data-tags="cloud infra devops">
     <div class="post-body">
       <div class="post-tags">
         <span class="tag cloud">Cloud</span>
-        <span class="tag security">Security</span>
+        <span class="tag infra">Infrastructure</span>
       </div>
-      <div class="post-title">Three Ways My $0 AWS Dashboard Lied to Me</div>
+      <div class="post-title">Engineering for Zero: A Cloud Dashboard That Costs Nothing to Run</div>
       <div class="post-excerpt">
-        I built CloudPulse so AWS Free Tier could never surprise me. Fifteen months later I audited all 456 lines against the live account — and found the docs described a system that never existed, the dashboard measured the calendar, and a live access key had been sitting in a plaintext file the whole time.
-      </div>
-      <div class="stack-pills">
-        <span class="pill">Go 1.25</span>
-        <span class="pill">Terraform</span>
-        <span class="pill">HashiCorp Vault</span>
-        <span class="pill">AWS EC2</span>
-        <span class="pill">GitHub Actions</span>
+        AWS Free Tier gives you 750 instance-hours and 100 GB of egress a month, and almost no visibility into either. CloudPulse tracks both from a single Go binary — built under one hard constraint: it must never cost a cent to run. Cost-driven API design, runtime secrets from Vault, and Terraform guardrails that make an expensive mistake impossible to plan.
       </div>
       <div class="post-meta" style="margin-top: 1rem;">
         <span>September 2026</span>
         <span class="dot"></span>
-        <span class="read-time">16 min read</span>
+        <span class="read-time">12 min read</span>
       </div>
     </div>
     <div class="feat-visual">
       <div class="feat-visual-row">
         <div class="feat-stat">
-          <div class="val">456</div>
-          <div class="lbl">Lines audited</div>
+          <div class="val">$0.00</div>
+          <div class="lbl">Monthly cost</div>
         </div>
         <div class="feat-divider"></div>
         <div class="feat-stat">
-          <div class="val" style="color: var(--accent);">3</div>
-          <div class="lbl">Load-bearing lies</div>
+          <div class="val" style="color: var(--accent);">1</div>
+          <div class="lbl">Binary, API + UI</div>
         </div>
       </div>
       <div class="feat-stat" style="margin-top: 0.5rem;">
-        <div class="val" style="font-size: 1.3rem; color: var(--ink-mid);">$0.00 spent</div>
-        <div class="lbl">Total AWS cost</div>
+        <div class="val" style="font-size: 1.3rem; color: var(--ink-mid);">6 dependencies</div>
+        <div class="lbl">Whole Go service</div>
       </div>
     </div>
   </a>
