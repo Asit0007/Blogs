@@ -523,14 +523,51 @@
 
 <!-- POSTS HEADER -->
 <div class="posts-header">
-  <span class="posts-count"><span id="visible-count">2</span> articles published</span>
+  <span class="posts-count"><span id="visible-count">3</span> articles published</span>
 </div>
 
 <!-- POSTS LIST -->
 <main class="posts-list" id="posts-container">
 
   <!-- POST 1 — FEATURED -->
-  <a class="post-card featured" href="/posts/cloudpulse/" data-tags="cloud infra devops">
+  <a class="post-card featured" href="/posts/quantbot/" data-tags="devops infra cloud">
+    <div class="post-body">
+      <div class="post-tags">
+        <span class="tag devops">DevOps</span>
+        <span class="tag infra">Infrastructure</span>
+      </div>
+      <div class="post-title">The Backtest That Lied</div>
+      <div class="post-excerpt">
+        An automated BTC futures bot running unattended on a free-tier ARM box — Terraform, containers, a deploy pipeline that refuses to restart the bot mid-trade, and public HTTPS through zero open ports. It was validated against a backtest reporting +90.7% a year. The real figure is +13.7%. Two bugs had been cancelling each other out inside the one invariant anyone thought to check.
+      </div>
+      <div class="post-meta" style="margin-top: 1rem;">
+        <span>September 2026</span>
+        <span class="dot"></span>
+        <span class="read-time">18 min read</span>
+      </div>
+    </div>
+    <div class="feat-visual">
+      <div class="feat-visual-row">
+        <div class="feat-stat">
+          <div class="val">+13.7%</div>
+          <div class="lbl">Real CAGR — was +90.7%</div>
+        </div>
+        <div class="feat-divider"></div>
+        <div class="feat-stat">
+          <div class="val" style="color: var(--accent);">126/126</div>
+          <div class="lbl">Trades reproduced</div>
+        </div>
+      </div>
+      <div class="feat-stat" style="margin-top: 0.5rem;">
+        <div class="val" style="font-size: 1.3rem; color: var(--ink-mid);">$0 / month</div>
+        <div class="lbl">Always-free ARM, 24/7</div>
+      </div>
+    </div>
+  </a>
+
+  <!-- POST 2 -->
+  <a class="post-card" href="/posts/cloudpulse/" data-tags="cloud infra devops">
+    <div class="post-num">02</div>
     <div class="post-body">
       <div class="post-tags">
         <span class="tag cloud">Cloud</span>
@@ -540,34 +577,18 @@
       <div class="post-excerpt">
         AWS Free Tier gives you 750 instance-hours and 100 GB of egress a month, and almost no visibility into either. CloudPulse tracks both from a single Go binary — built under one hard constraint: it must never cost a cent to run. Cost-driven API design, runtime secrets from Vault, and Terraform guardrails that make an expensive mistake impossible to plan.
       </div>
-      <div class="post-meta" style="margin-top: 1rem;">
+      <div class="post-meta">
         <span>September 2026</span>
         <span class="dot"></span>
         <span class="read-time">12 min read</span>
       </div>
     </div>
-    <div class="feat-visual">
-      <div class="feat-visual-row">
-        <div class="feat-stat">
-          <div class="val">$0.00</div>
-          <div class="lbl">Monthly cost</div>
-        </div>
-        <div class="feat-divider"></div>
-        <div class="feat-stat">
-          <div class="val" style="color: var(--accent);">1</div>
-          <div class="lbl">Binary, API + UI</div>
-        </div>
-      </div>
-      <div class="feat-stat" style="margin-top: 0.5rem;">
-        <div class="val" style="font-size: 1.3rem; color: var(--ink-mid);">6 dependencies</div>
-        <div class="lbl">Whole Go service</div>
-      </div>
-    </div>
+    <span class="post-arrow">&rarr;</span>
   </a>
 
-  <!-- POST 2 -->
+  <!-- POST 3 -->
   <a class="post-card" href="/posts/magento-deploykit/" data-tags="devops infra">
-    <div class="post-num">02</div>
+    <div class="post-num">03</div>
     <div class="post-body">
       <div class="post-tags">
         <span class="tag devops">DevOps</span>
@@ -589,7 +610,7 @@
   <!-- COMING SOON PLACEHOLDERS — replace these as you write new posts -->
 
   <a class="post-card coming-soon" href="#" data-tags="devops ci-cd">
-    <div class="post-num">03</div>
+    <div class="post-num">04</div>
     <div class="post-body">
       <div class="post-tags">
         <span class="tag devops">DevOps</span>

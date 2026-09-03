@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Backtest That Lied — Asit Minz</title>
+<meta name="description" content="QuantBot: an automated BTC futures bot on free-tier ARM. A backtest said +90.7%/yr. The real figure was +13.7%. How two cancelling bugs hid inside a working invariant for months — and what it takes to trust a number you generated yourself.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0f0f0e;
+    --ink-mid: #3a3a36;
+    --ink-muted: #7a7a72;
+    --ink-faint: #b5b5ac;
+    --bg: #faf9f6;
+    --bg-card: #ffffff;
+    --bg-code: #f0ede6;
+    --bg-highlight: #fff8ec;
+    --rule: #e2dfd6;
+    --accent: #c84b11;
+    --accent-soft: #f2ddd3;
+    --accent-2: #1a6b4a;
+    --accent-2-soft: #d3efe4;
+    --blue: #1a4a8a;
+    --blue-soft: #d6e4f7;
+  }
+
+  html { font-size: 18px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    border-bottom: 1px solid var(--rule);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .site-header .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .site-header nav a {
+    color: var(--ink-muted);
+    text-decoration: none;
+    font-size: 0.82rem;
+    margin-left: 1.5rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .site-header nav a:hover { color: var(--accent); }
+
+  /* ── HERO ── */
+  .hero {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 5rem 2rem 3rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .tag {
+    background: var(--accent);
+    color: white;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.3em 0.8em;
+    border-radius: 2px;
+  }
+  .tag.green { background: var(--accent-2); }
+  .tag.blue { background: var(--blue); }
+  .hero-meta time {
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+    font-weight: 400;
+  }
+  .hero-meta .dot {
+    width: 3px; height: 3px;
+    background: var(--ink-faint);
+    border-radius: 50%;
+  }
+  .hero-meta .read-time {
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+  }
+
+  h1.hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.18;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+  }
+  h1.hero-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--ink-mid);
+    line-height: 1.65;
+    max-width: 620px;
+    margin-bottom: 2rem;
+  }
+
+  .author-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .author-avatar {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, #c84b11 0%, #8b2500 100%);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 0.9rem;
+    color: white;
+    flex-shrink: 0;
+  }
+  .author-info .name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .author-info .role {
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+  }
+
+  /* ── STACK BADGE STRIP ── */
+  .stack-strip {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .stack-strip .label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-right: 0.25rem;
+  }
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    padding: 0.25em 0.65em;
+    border-radius: 3px;
+    font-weight: 500;
+    border: 1px solid transparent;
+  }
+  .badge.debian { background: #f2e5e8; color: #6e1a29; border-color: #e8c4ca; }
+  .badge.php { background: #ece8f5; color: #3a2a7a; border-color: #cdc3ec; }
+  .badge.mysql { background: #e3ecf8; color: #1a3d6e; border-color: #b8cfec; }
+  .badge.nginx { background: #e4f3e9; color: #1a5a32; border-color: #b8dec5; }
+  .badge.es { background: #e3eef8; color: #0a3d6e; border-color: #b0cfe8; }
+  .badge.redis { background: #fde8e8; color: #7a1a1a; border-color: #f5c0c0; }
+  .badge.varnish { background: #e8f2fb; color: #1a3a6a; border-color: #b8d0f0; }
+
+  /* ── BODY CONTENT ── */
+  .content {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 3.5rem 2rem 5rem;
+  }
+
+  /* TOC */
+  .toc {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    padding: 1.5rem 2rem;
+    margin-bottom: 3.5rem;
+  }
+  .toc-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--ink-muted);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .toc ol {
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .toc ol li { font-size: 0.9rem; }
+  .toc a {
+    color: var(--ink-mid);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .toc a:hover { color: var(--accent); }
+
+  /* Prose */
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.7rem;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    margin: 3rem 0 1rem;
+    line-height: 1.25;
+  }
+  h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 2rem 0 0.6rem;
+    letter-spacing: -0.01em;
+  }
+  p { margin-bottom: 1.3rem; color: var(--ink-mid); }
+  p strong { color: var(--ink); font-weight: 600; }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-soft); transition: border-color 0.2s; }
+  a:hover { border-color: var(--accent); }
+
+  ul, ol {
+    padding-left: 1.4rem;
+    margin-bottom: 1.3rem;
+    color: var(--ink-mid);
+  }
+  li { margin-bottom: 0.35rem; }
+  li strong { color: var(--ink); }
+
+  hr {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 3rem 0;
+  }
+
+  /* Code */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82em;
+    background: var(--bg-code);
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+  pre {
+    background: #1c1b18;
+    border-radius: 8px;
+    padding: 1.5rem;
+    overflow-x: auto;
+    margin: 1.5rem 0 2rem;
+    position: relative;
+  }
+  pre .lang-label {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.9rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: #6a6a60;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+    font-size: 0.82rem;
+    color: #d4cfbe;
+    line-height: 1.7;
+  }
+  .kw { color: #e07b4a; }
+  .cm { color: #6a7a60; font-style: italic; }
+  .str { color: #98c899; }
+  .fn { color: #7ab8d4; }
+  .num { color: #d4a46a; }
+
+  /* Pull quote */
+  .pullquote {
+    border-left: 3px solid var(--accent);
+    padding: 1rem 1.5rem;
+    margin: 2rem 0;
+    background: var(--accent-soft);
+    border-radius: 0 6px 6px 0;
+  }
+  .pullquote p {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Architecture box */
+  .arch-box {
+    background: #1c1b18;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1.5rem 0 2rem;
+    overflow-x: auto;
+  }
+  .arch-box pre {
+    background: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+  }
+  .arch-box pre code {
+    color: #a8d4b0;
+    font-size: 0.8rem;
+  }
+  .arch-box .comment-line { color: #6a7a60; }
+  .arch-box .arrow { color: #7ab8d4; }
+  .arch-box .label { color: #d4cfbe; }
+  .arch-box .service { color: #e07b4a; }
+
+  /* Decision table */
+  .decision-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0 2rem;
+    font-size: 0.9rem;
+  }
+  .decision-table th {
+    background: var(--ink);
+    color: white;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 500;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .decision-table th:first-child { border-radius: 6px 0 0 0; }
+  .decision-table th:last-child { border-radius: 0 6px 0 0; }
+  .decision-table td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    color: var(--ink-mid);
+    line-height: 1.55;
+  }
+  .decision-table td:first-child {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--accent);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .decision-table tr:last-child td { border-bottom: none; }
+  .decision-table tr:nth-child(even) td { background: #faf8f4; }
+
+  /* Perf callout */
+  .perf-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0 2rem;
+  }
+  .perf-card {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+  }
+  .perf-card .label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 0.5rem;
+  }
+  .perf-card .value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .perf-card .desc { font-size: 0.82rem; color: var(--ink-muted); }
+  .perf-card.highlight { border-color: var(--accent-2); }
+  .perf-card.highlight .value { color: var(--accent-2); }
+
+  /* Script cards */
+  .script-grid {
+    display: grid;
+    gap: 1rem;
+    margin: 1.5rem 0 2rem;
+  }
+  .script-card {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 1rem;
+    align-items: start;
+  }
+  .script-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    color: var(--accent);
+    line-height: 1;
+    padding-top: 0.1rem;
+  }
+  .script-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .script-desc { font-size: 0.85rem; color: var(--ink-muted); line-height: 1.55; }
+
+  /* Lessons */
+  .lesson {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    border-left: 3px solid var(--blue);
+  }
+  .lesson h4 {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+  .lesson p { font-size: 0.88rem; margin: 0; }
+
+  /* Closing CTA */
+  .cta-box {
+    background: var(--ink);
+    color: white;
+    border-radius: 10px;
+    padding: 2.5rem;
+    text-align: center;
+    margin-top: 3.5rem;
+  }
+  .cta-box h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: white;
+    margin-bottom: 0.75rem;
+  }
+  .cta-box p { color: #b5b5ac; font-size: 0.95rem; margin-bottom: 1.5rem; }
+  .cta-links {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .cta-btn {
+    display: inline-block;
+    padding: 0.65rem 1.4rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    transition: opacity 0.2s;
+  }
+  .cta-btn:hover { opacity: 0.85; border-bottom: none; }
+  .cta-btn.primary { background: var(--accent); color: white; }
+  .cta-btn.secondary { background: #2a2a26; color: #d4cfbe; border: 1px solid #3a3a36; }
+
+  /* Footnote */
+  .footnote {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* ── SCREENSHOTS ── */
+  .screenshot {
+    margin: 2rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+  }
+  .screenshot img {
+    width: 100%;
+    display: block;
+  }
+  .screenshot figcaption {
+    background: var(--bg-card);
+    border-top: 1px solid var(--rule);
+    padding: 0.65rem 1rem;
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    font-family: 'JetBrains Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .screenshot figcaption::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .screenshot-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  .screenshot-pair .screenshot { margin: 0; }
+
+  @media (max-width: 600px) {
+    .perf-grid { grid-template-columns: 1fr; }
+    .screenshot-pair { grid-template-columns: 1fr; }
+    .site-header nav { display: none; }
+    h2 { font-size: 1.4rem; }
+  }
+
+  /* ── STACK BADGES (this post) ── */
+  .badge.go        { background: #e0f2f7; color: #05506b; border-color: #b3dfec; }
+  .badge.terraform { background: #efe8f8; color: #4b1f8a; border-color: #d5c4ee; }
+  .badge.docker    { background: #e3edfb; color: #17457f; border-color: #bcd3f2; }
+  .badge.aws       { background: #fdefdd; color: #8a4c05; border-color: #f4d3ab; }
+  .badge.vault     { background: #f1eee9; color: #3a3a36; border-color: #ddd8cf; }
+  .badge.actions   { background: #e9e6f4; color: #332a6b; border-color: #cbc5e6; }
+
+  /* ── HERO STAT BAND ── */
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    margin: 2.25rem 0 2rem;
+    padding: 1.35rem 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-stat .val {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.75rem;
+    line-height: 1;
+    color: var(--accent-2);
+    margin-bottom: 0.3rem;
+  }
+  .hero-stat .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  /* ── NUMBERED SECTION HEADINGS ── */
+  h2 .sec-num {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    margin-bottom: 0.55rem;
+  }
+  h2 { scroll-margin-top: 5rem; }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--bg-card);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 1.4rem 1.6rem;
+    margin: 1.75rem 0 2rem;
+  }
+  .callout .callout-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.85rem;
+  }
+  .callout ul, .callout p { margin-bottom: 0; }
+  .callout ul { padding-left: 1.2rem; }
+  .callout li { font-size: 0.9rem; }
+  .callout li:last-child { margin-bottom: 0; }
+
+  /* ── DECISION TABLE: labels here are phrases, so column 1 must wrap ── */
+  .decision-table td:first-child {
+    white-space: normal;
+    width: 32%;
+    line-height: 1.5;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.86rem;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .decision-table td:first-child code { color: var(--accent); font-weight: 500; }
+
+  /* ── CHECK LIST ── */
+  .wins { list-style: none; padding-left: 0; }
+  .wins li {
+    position: relative;
+    padding-left: 1.8rem;
+    margin-bottom: 0.9rem;
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+  .wins li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: -0.05rem;
+    color: var(--accent-2);
+    font-weight: 700;
+  }
+
+  /* ── ROADMAP ── */
+  .roadmap { list-style: none; padding-left: 0; margin-bottom: 2rem; }
+  .roadmap li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+  .roadmap li:last-child { border-bottom: none; }
+  .roadmap .rm-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 0.2em 0.55em;
+    height: fit-content;
+    margin-top: 0.15rem;
+    white-space: nowrap;
+  }
+  .roadmap .rm-tag.next { color: var(--accent); border-color: var(--accent-soft); background: var(--accent-soft); }
+
+  .lesson.win { border-left-color: var(--accent-2); }
+
+  @media (max-width: 600px) {
+    .hero-stats { grid-template-columns: repeat(2, 1fr); gap: 1.25rem 1rem; }
+    .roadmap li { grid-template-columns: 1fr; gap: 0.4rem; }
+    .roadmap .rm-tag { justify-self: start; }
+  }
+<style>
+  /* ── STACK BADGES (this post) ── */
+  .badge.python     { background: #e5eef7; color: #1a3f6b; border-color: #bcd4ea; }
+  .badge.docker     { background: #e3edfb; color: #17457f; border-color: #bcd3f2; }
+  .badge.terraform  { background: #efe8f8; color: #4b1f8a; border-color: #d5c4ee; }
+  .badge.oci        { background: #fdeaea; color: #8a1010; border-color: #f4bfbf; }
+  .badge.cloudflare { background: #fdefdd; color: #8a4c05; border-color: #f4d3ab; }
+  .badge.actions    { background: #e9e6f4; color: #332a6b; border-color: #cbc5e6; }
+  .badge.telegram   { background: #e2f1fa; color: #10506e; border-color: #b6dced; }
+  .badge.plotly     { background: #eae8f6; color: #37307a; border-color: #ccc7e9; }
+
+  /* ── RESULTS TABLE — numeric columns, monospaced and right-aligned ── */
+  .results-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0 2rem; font-size: 0.88rem; }
+  .results-table th {
+    background: var(--ink);
+    color: white;
+    padding: 0.7rem 0.85rem;
+    text-align: right;
+    font-weight: 500;
+    font-size: 0.74rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .results-table th:first-child { text-align: left; border-radius: 6px 0 0 0; }
+  .results-table th:last-child  { text-align: left; border-radius: 0 6px 0 0; }
+  .results-table td {
+    padding: 0.7rem 0.85rem;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-mid);
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+  .results-table td:first-child {
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .results-table td:last-child {
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+  }
+  .results-table tr:last-child td { border-bottom: none; }
+  .results-table tr.selected td { background: var(--accent-2-soft); color: var(--ink); }
+  .results-table tr.selected td:last-child { color: var(--accent-2); font-weight: 600; }
+  .results-table .rejected { color: var(--ink-faint); }
+  .table-scroll { overflow-x: auto; margin: 1.5rem 0 2rem; }
+  .table-scroll .results-table, .table-scroll .decision-table { margin: 0; }
+
+  /* ── CALLOUT VARIANTS ── */
+  .callout.warn { border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; background: var(--bg-highlight); }
+  .callout.warn .callout-title { color: var(--accent); }
+
+  /* ── THE BUG: two formulas side by side ── */
+  .formula-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0 0.5rem; }
+  .formula-card { background: #1c1b18; border-radius: 8px; padding: 1.1rem 1.25rem; }
+  .formula-card .fc-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #6a6a60;
+    margin-bottom: 0.6rem;
+  }
+  .formula-card code {
+    background: none;
+    padding: 0;
+    color: #d4cfbe;
+    font-size: 0.76rem;
+    line-height: 1.65;
+    display: block;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .formula-card .bad { color: #e0704a; font-weight: 500; }
+
+  @media (max-width: 600px) {
+    .formula-pair { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="logo" href="/">Asit Minz</a>
+  <nav>
+    <a href="https://github.com/Asit0007" target="_blank">GitHub</a>
+    <a href="https://linkedin.com/in/" target="_blank">LinkedIn</a>
+    <a href="mailto:asitminz007@gmail.com">Contact</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-meta">
+    <span class="tag">DevOps</span>
+    <span class="tag green">Infrastructure</span>
+    <span class="tag blue">Case Study</span>
+    <span class="dot"></span>
+    <time datetime="2026-09-03">September 2026</time>
+    <span class="dot"></span>
+    <span class="read-time">18 min read</span>
+  </div>
+
+  <h1 class="hero-title">
+    The Backtest That <em>Lied</em>
+  </h1>
+
+  <p class="hero-sub">
+    QuantBot trades BTC perpetual futures on a schedule, unattended, on a free-tier ARM box that costs nothing to run. For months it was validated against a backtest reporting +90.7% a year. The real figure is +13.7%. This is the story of two bugs that cancelled each other out inside the one invariant I thought to check — and what it took to trust a number I had generated myself.
+  </p>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="val">126/126</div>
+      <div class="lbl">Trades reproduced</div>
+    </div>
+    <div class="hero-stat">
+      <div class="val">$0.00</div>
+      <div class="lbl">Monthly run cost</div>
+    </div>
+    <div class="hero-stat">
+      <div class="val">6.9 yr</div>
+      <div class="lbl">Backtest window</div>
+    </div>
+    <div class="hero-stat">
+      <div class="val">0</div>
+      <div class="lbl">Inbound ports open</div>
+    </div>
+  </div>
+
+  <div class="author-row">
+    <div class="author-avatar">AM</div>
+    <div class="author-info">
+      <div class="name">Asit Minz</div>
+      <div class="role">Infrastructure &amp; Backend Engineering</div>
+    </div>
+  </div>
+</section>
+
+<!-- STACK BADGES -->
+<div class="stack-strip">
+  <span class="label">Stack:</span>
+  <span class="badge python">Python 3.11 · ccxt</span>
+  <span class="badge docker">Docker multi-stage</span>
+  <span class="badge terraform">Terraform ~&gt;5.0</span>
+  <span class="badge oci">Oracle Cloud ARM</span>
+  <span class="badge cloudflare">Cloudflare Tunnel</span>
+  <span class="badge actions">GitHub Actions</span>
+  <span class="badge plotly">Plotly Dash</span>
+  <span class="badge telegram">Telegram</span>
+</div>
+
+<!-- CONTENT -->
+<main class="content">
+
+  <div class="toc">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#brief">The Brief: A Program That Can Lose Money</a></li>
+      <li><a href="#processes">Three Processes, One Volume, No Database</a></li>
+      <li><a href="#signal">The Signal, and Why It's Locked</a></li>
+      <li><a href="#lie">The Backtest That Lied</a></li>
+      <li><a href="#cost">What the Correction Cost</a></li>
+      <li><a href="#sizing">Sizing When There Is No Stop-Loss</a></li>
+      <li><a href="#replay">Proving the Live Code Matches the Backtest</a></li>
+      <li><a href="#infra">Infrastructure That Won't Close Your Position</a></li>
+      <li><a href="#gap">The Gap Between the Repo and the Machine</a></li>
+    </ol>
+  </div>
+
+  <!-- 01 -->
+  <h2 id="brief"><span class="sec-num">01</span>The Brief: A Program That Can Lose Money</h2>
+
+  <p>
+    Discretionary trading fails on two axes, and both of them are mechanical. Nobody watches a 15-minute chart around the clock. And everybody overrides their own rules at precisely the moment the rules are earning their keep — after a losing streak, when the next signal looks like the one that finally works.
+  </p>
+
+  <p>
+    Both failure modes are removable by writing them out of the loop. The signal becomes a function. The position size becomes a formula. The cooling-off period becomes a circuit breaker that enforces the timeout a human would have talked themselves out of.
+  </p>
+
+  <p>
+    So: <strong>QuantBot</strong>. BTC/USDT perpetual futures, 15-minute candles, one decision per closed candle, running unattended on a free-tier ARM VM and reporting everything it does to Telegram and a public dashboard.
+  </p>
+
+  <p>
+    The trading logic is about 1,500 lines of Python. Everything around it — Terraform-provisioned infrastructure, a multi-stage Docker build, a deployment pipeline that refuses to restart the bot mid-trade, public HTTPS through zero open ports, a Telegram control plane — is the part I would actually point at in an interview. A trading bot is a small distributed system that happens to have opinions about RSI, and the distributed-system half is where the engineering lives.
+  </p>
+
+  <p>
+    This post is mostly about neither. It is about the day I found out the numbers were wrong.
+  </p>
+
+  <div class="pullquote">
+    <p>"An invariant that holds is not proof the model is right. It can just as easily be two errors cancelling."</p>
+  </div>
+
+  <!-- 02 -->
+  <h2 id="processes"><span class="sec-num">02</span>Three Processes, One Volume, No Database</h2>
+
+  <p>
+    Three Python processes share one Docker named volume, and <strong>files are the only IPC</strong>. There is no database, no queue, and no message bus.
+  </p>
+
+  <figure class="screenshot">
+    <img src="/assets/images/quantbot/architecture.svg" alt="QuantBot runtime topology: bot.py and notifier.py both talk to Binance and write to a shared Docker volume that dashboard.py reads, served through nginx and an outbound Cloudflare Tunnel, all on one always-free Oracle Cloud ARM instance">
+    <figcaption>Everything inside the dashed boundary is one always-free ARM instance — and nothing crosses it inbound</figcaption>
+  </figure>
+
+  <table class="decision-table">
+    <thead>
+      <tr><th>Process</th><th>Role</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>bot.py</code></td>
+        <td>The trading engine, and <strong>the only writer of trade state.</strong> Wakes six seconds after each 15-minute boundary, discards the still-forming candle, and makes exactly one decision.</td>
+      </tr>
+      <tr>
+        <td><code>notifier.py</code></td>
+        <td><strong>The only process that talks to Telegram.</strong> One 60-second loop running five independent components: trade alerts, a heartbeat monitor, an RSI radar across six spot pairs, a daily summary, and a command handler.</td>
+      </tr>
+      <tr>
+        <td><code>dashboard.py</code></td>
+        <td>A Plotly Dash UI that <strong>reads every state file and writes nothing.</strong> There is no write action anywhere in the interface.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    <strong>Why files and not a database.</strong> One host, three processes, exactly one writer per file, and state you can <code>cat</code> over SSH at three in the morning. Postgres or Redis would add an operational failure mode and buy nothing at this scale. The costs of that choice are real — non-atomic writes and no file locking — and they are on the limitations list rather than swept under it.
+  </p>
+
+  <p>The coupling between the three is deliberately unsophisticated:</p>
+
+  <ul>
+    <li><strong>A closed trade</strong> is the notifier noticing that <code>trade_log.csv</code> gained a row.</li>
+    <li><strong>An opened position</strong> is <code>position.entry_time</code> changing inside <code>bot_state.json</code>.</li>
+    <li><strong>A crashed or wedged bot</strong> is the wall-clock field <code>last_updated_at</code> going quiet for thirty minutes.</li>
+  </ul>
+
+  <p>
+    That third one deserves its own paragraph, because it is a fossil. The heartbeat originally compared <code>now</code> against <code>last_candle_ts</code> — the candle's <em>own</em> timestamp. A candle stamped 16:00 and processed at 16:30 looks instantly half an hour stale, so the monitor fired a crash alert on every single candle, forever. The fix was to add a separate wall-clock field that means "the bot was alive at this moment" rather than "this is the bar we last looked at."
+  </p>
+
+  <p>
+    <code>last_updated_at</code> exists for exactly that reason. It looks redundant next to <code>last_candle_ts</code> until you understand what it is measuring, which is roughly the definition of a comment worth writing.
+  </p>
+
+  <!-- 03 -->
+  <h2 id="signal"><span class="sec-num">03</span>The Signal, and Why It's Locked</h2>
+
+  <p>
+    An entry requires <strong>all three gates to fire on the same closed 15-minute candle.</strong> The selectivity is the entire edge:
+  </p>
+
+  <pre><span class="lang-label">signal</span><code><span class="cm">Gate 1 — RSI(14) divergence          armed for DIV_MEMORY = 3 candles</span>
+    Bullish:  price makes a lower low   +  RSI makes a higher low
+    Bearish:  price makes a higher high +  RSI makes a lower high
+    Detected over a rolling min/max window — deliberately NOT
+    pivot-based swing detection (see below)
+
+<span class="cm">Gate 2 — MACD(12/26/9) cross         timing confirmation</span>
+
+<span class="cm">Gate 3 — Volume spike                participation confirmation</span>
+    volume &gt; 2.0 × its 20-bar SMA
+    The binding constraint — most candles die here
+
+        <span class="kw">↓ all three aligned ↓</span>
+
+<span class="fn">ENTRY</span>   BTC/USDT perp · isolated margin · 5× leverage
+<span class="fn">EXIT</span>    opposite three-gate signal, or liquidation. Nothing else.</code></pre>
+
+  <p>
+    That produces roughly <strong>18 trades a year, held about 18 days each.</strong> It is a swing strategy that happens to trigger on 15-minute candles, and calling it anything else would set the wrong expectations about what the numbers later in this post mean.
+  </p>
+
+  <p>
+    Gate 1 carries a scar. Swing detection originally marked a high or low at bar <code>i</code> using bars <code>i+1</code> through <code>i+5</code> — data that does not exist at bar <code>i</code> in real time. The backtest that produced was worth <strong>$2.4 billion</strong>, which is the useful kind of wrong: absurd enough to be caught immediately. It is why the live detector uses a rolling min/max window rather than confirmed pivots. Subtler versions of the same mistake are the subject of the next section.
+  </p>
+
+  <h3>The order of operations is load-bearing</h3>
+
+  <p><code>QuantBot.process()</code> runs once per closed candle, in this order:</p>
+
+  <div class="arch-box">
+    <pre><code><span class="comment-line">1.</span> <span class="label">DCA check</span>                <span class="comment-line">— monthly contribution on DCA_DAY</span>
+<span class="comment-line">2.</span> <span class="service">Snapshot the corpus</span>      <span class="comment-line">← the non-obvious one</span>
+<span class="comment-line">3.</span> <span class="label">Update armed counters</span>    <span class="comment-line">— fresh divergence resets, else decay by 1</span>
+<span class="comment-line">4.</span> <span class="label">Funding</span>                  <span class="comment-line">— real 8h settlements, 00:00 / 08:00 / 16:00 UTC</span>
+<span class="comment-line">5.</span> <span class="label">Exits</span>                    <span class="comment-line">— liquidation (intrabar), then opposite signal</span>
+<span class="comment-line">6.</span> <span class="label">Entries</span>                  <span class="comment-line">— only if flat and not paused</span></code></pre>
+  </div>
+
+  <p>
+    An exit and a fresh entry can both happen on the same candle. That is why step 2 exists: position size must be computed from the corpus <em>as of the candle open</em>, so that an exit's profit ratchet cannot inflate the entry that follows it on the same bar. Reading the live corpus at entry time instead — which is what the code did originally, and which looks completely reasonable — drifts the two engines apart to a profit factor of 1.59 against 1.63 over 6.9 years.
+  </p>
+
+  <p>
+    One line's worth of ordering, two and a half percent of profit factor. The strategy parameters live in <code>.env</code> rather than in code, and they are frozen: changing any of them invalidates every number this post cites.
+  </p>
+
+  <!-- 04 -->
+  <h2 id="lie"><span class="sec-num">04</span>The Backtest That Lied</h2>
+
+  <p>
+    For months, the repository headlined this: <strong>$100 → $9,347. +90.7% a year. Profit factor 1.60.</strong> Measured over 6.9 years spanning a COVID crash, two bull cycles and the FTX collapse.
+  </p>
+
+  <p>Printed directly underneath it, in the same table, was a maximum drawdown of <strong>184.2%.</strong></p>
+
+  <p>
+    That is the tell, and I walked past it for months. Drawdown is <code>(peak − equity) / peak</code>. It cannot exceed 100% unless equity went <em>negative</em>. The simulated account had gone bankrupt, and the backtest had carried on trading it — because nothing in the engine checked for ruin, and nothing compared the margin a trade required against the balance actually available to fund it.
+  </p>
+
+  <p>Underneath that were two lines of code that had been wrong since the beginning:</p>
+
+  <div class="formula-pair">
+    <div class="formula-card">
+      <div class="fc-label">close_position — P&amp;L</div>
+      <code>raw_pnl = (exit − entry)
+        × qty
+        <span class="bad">× LEVERAGE</span></code>
+    </div>
+    <div class="formula-card">
+      <div class="fc-label">size_position — quantity</div>
+      <code>qty = dollar_risk
+    / (stop_distance
+       <span class="bad">× LEVERAGE</span>)</code>
+    </div>
+  </div>
+
+  <p>
+    <strong>Real futures P&amp;L never multiplies by leverage.</strong> Profit and loss is <code>Δprice × qty</code>. Leverage decides how much margin the exchange locks up and where the liquidation price sits, and it does nothing else. Multiplying by it is not an approximation; it is a category error.
+  </p>
+
+  <p>
+    So why did roughly twenty backtests, several months, and an entire written specification fail to notice? Because <strong>the two errors cancel exactly for a loss at the stop.</strong> Dividing the size by 20 and then multiplying the P&amp;L by 20 gives you back the number you started with — for that one case. And that one case was the only invariant anyone ever checked: <em>a stopped-out trade should lose 10% of the corpus.</em> It did. Perfectly. Every time.
+  </p>
+
+  <p>Everything that was not that specific case was wrong by a factor of twenty.</p>
+
+  <h3>It was caught by a screenshot</h3>
+
+  <p>
+    Not by a test — there aren't any. By looking at the dashboard and seeing a trade row reporting <code>Invested $7.02</code> alongside <code>P&amp;L −$15.15</code>.
+  </p>
+
+  <p>
+    Under isolated margin, losing more than you posted is not a bad outcome, it is an impossible one. So one of those two numbers was a lie, and the interesting question was which. The way in was the <strong>fee column</strong> — the only field in the row with no leverage term anywhere in its derivation. Solving the row backwards from the fee pinned <code>LEVERAGE = 20.0</code> sitting in both the P&amp;L formula and the "invested" formula, and showed the real margin on that trade had been $139.63.
+  </p>
+
+  <div class="callout">
+    <div class="callout-title">Three consequences, in ascending order of how bad they were</div>
+    <ul>
+      <li><strong>Stored quantity, stored margin, and the dashboard's "Invested $" were all off by 20×.</strong> Cosmetic, in the sense that no money moved.</li>
+      <li><strong>Live mode would have sent Binance an order 20× too small</strong> while booking 20× the P&amp;L into its own ledger. The bot's balance and the exchange's would have diverged on the very first trade, and the bot would have believed itself.</li>
+      <li><strong>Fees are a fraction of notional, and notional was 1/20th of the truth.</strong> Every backtest in the project's history had undercounted trading costs by 20×.</li>
+    </ul>
+  </div>
+
+  <p>
+    That last one is the expensive one, because the error <em>scales with trade count.</em> A strategy that trades twice a month barely notices. A strategy that trades six hundred times gets a subsidy. Which means the bug had spent months quietly putting its thumb on the scale in favour of every high-frequency idea I had ever tested against it.
+  </p>
+
+  <!-- 05 -->
+  <h2 id="cost"><span class="sec-num">05</span>What the Correction Cost</h2>
+
+  <p>
+    With a ruin check and a margin-affordability cap added, and leverage removed from the P&amp;L, the same signal over the same 6.9 years produces this:
+  </p>
+
+  <div class="table-scroll">
+  <table class="results-table">
+    <thead>
+      <tr>
+        <th>Configuration</th>
+        <th>Final</th>
+        <th>CAGR</th>
+        <th>PF</th>
+        <th>Win rate</th>
+        <th>Verdict</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="rejected">20× · ATR stop</td>
+        <td class="rejected">$789</td>
+        <td class="rejected">−5.7%</td>
+        <td class="rejected">0.92</td>
+        <td class="rejected">12.9%</td>
+        <td>rejected</td>
+      </tr>
+      <tr>
+        <td class="rejected">5× · ATR stop</td>
+        <td class="rejected">$2,847</td>
+        <td class="rejected">+16.8%</td>
+        <td class="rejected">1.16</td>
+        <td class="rejected">27.1%</td>
+        <td>rejected — see below</td>
+      </tr>
+      <tr class="selected">
+        <td>5× · no stop</td>
+        <td>$2,569</td>
+        <td>+13.7%</td>
+        <td>1.63</td>
+        <td>54.0%</td>
+        <td>✓ selected</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>
+    The headline went from <strong>+90.7% a year to +13.7% a year</strong>, and from $9,347 to $2,569. Note that the middle row still <em>looks</em> like the winner on terminal equity, and it was rejected anyway — which is the more interesting half of the story.
+  </p>
+
+  <p>
+    A robustness suite ran four tests on each candidate: an out-of-sample split, a 10,000-sample bootstrap on profit factor, a profit-concentration check, and per-year consistency. The no-stop model clears all four. <strong>The stop model fails three</strong>, and fails the concentration test in the most damning way available: its entire 6.9-year net profit is a single trade. One position contributed <code>+$1,674</code> against a total net of <code>+$1,540</code>. Remove that one trade and the strategy is net negative across seven years.
+  </p>
+
+  <p>
+    A high terminal equity produced by one lucky position is not an edge. It is a lottery ticket with a backtest wrapped around it.
+  </p>
+
+  <h3>The research history was collateral damage</h3>
+
+  <p>Re-running the archive on the corrected engine turned several settled conclusions inside out:</p>
+
+  <ul class="wins">
+    <li><strong>A 15-minute mean-reversion strategy scored $8,205 at PF 1.21.</strong> Corrected, it returns <code>$870</code> at <code>PF 0.90</code> — a losing system. Its 602 trades, each paying 1/20th of its real fees, <em>were</em> the entire edge.</li>
+    <li><strong>The parameter sensitivity sweep survived intact.</strong> Perturbing every signal parameter one step in each direction leaves <strong>18 of 18</strong> neighbouring configurations profitable. That is a plateau, not a fitted spike, and it is the single result that most makes me believe the remaining edge is real.</li>
+    <li><strong>The "BTC only" verdict survived too.</strong> Per-symbol profit factor: BTC 1.63, XRP 1.19, SOL 1.08, ETH 1.05, BNB 0.55. A five-symbol portfolio scores PF 1.03 at 82.6% drawdown — the alts are correlated enough that trading all five is placing the same bet five times while calling it diversification.</li>
+  </ul>
+
+  <div class="pullquote">
+    <p>"A fee bug scales with trade count, which means it had been quietly subsidising every high-frequency idea I ever tested."</p>
+  </div>
+
+  <!-- 06 -->
+  <h2 id="sizing"><span class="sec-num">06</span>Sizing When There Is No Stop-Loss</h2>
+
+  <p>The configuration that survived all four robustness tests removes the stop-loss entirely.</p>
+
+  <pre><span class="lang-label">python</span><code><span class="cm"># size_position_nostop() — margin-first</span>
+margin   = corpus * RISK_PER_TRADE   <span class="cm"># 10% of corpus — IS the maximum loss</span>
+notional = margin * LEVERAGE
+qty      = notional / price</code></pre>
+
+  <p>
+    With no stop there is no stop distance to size against, so the margin becomes the risk decision directly. Under isolated margin you cannot lose more than the margin posted, which means <strong>the loss ceiling is enforced by the exchange rather than by an order that might fail to place.</strong>
+  </p>
+
+  <p>That clause is the whole argument, and it is worth being explicit about why removing a safety feature made the system safer.</p>
+
+  <p>
+    The stop model's worst case is this: the <code>STOP_MARKET</code> order fails to place, three retries all fail, the code logs CRITICAL and falls back to checking the stop itself once per candle — and then the process dies. You are now holding a leveraged position with no protective order and nothing running to close it. The loss is bounded by nothing in particular.
+  </p>
+
+  <p>
+    The no-stop model's worst case is that the position is liquidated at roughly 19.6% away from entry — <code>1/leverage</code> minus the maintenance margin rate — and you lose the 10% of corpus you posted. That ceiling holds whether or not the bot ever runs again, because it is the exchange's rule and not the program's intention.
+  </p>
+
+  <p>
+    It is also about eight times cheaper to operate. Under the stop model, <code>margin / corpus = RISK / (stop_pct × LEVERAGE)</code>, which reaches roughly 1.0 for a 2% stop at 5× — meaning <strong>every trade posted the entire account as margin.</strong> The no-stop model posts a flat 10%. Across the 6.9-year backtest, total fees fall from <code>$581</code> to <code>$64</code>.
+  </p>
+
+  <div class="callout warn">
+    <div class="callout-title">The one setting that silently breaks all of this</div>
+    <p>
+      Isolated margin is the <em>only</em> thing capping a losing trade in this model. If <strong>auto-add-margin is enabled</strong> on the exchange, Binance tops the position up from the wallet balance and the cap quietly stops being a cap. The bot logs a warning at startup and <strong>cannot enforce it</strong> — it is a checkbox in someone else's UI. It is the single most important item on the go-live checklist, and it is the kind of dependency worth writing down in three places.
+    </p>
+  </div>
+
+  <p>
+    One asymmetry in the exit logic is deliberate. Every exit in this bot triggers on the candle <em>close</em> — except liquidation, which is checked <strong>intrabar</strong> against the candle's high and low. The exchange does not wait for the close, so checking the close would hide most liquidations behind wicks and produce a backtest that quietly survives events the real account would not have.
+  </p>
+
+  <!-- 07 -->
+  <h2 id="replay"><span class="sec-num">07</span>Proving the Live Code Matches the Backtest</h2>
+
+  <p>
+    The gate for putting real money in is: twenty or more paper trades, with win rate and profit factor within ±20% of the backtested 54.0% and 1.63.
+  </p>
+
+  <p>
+    That gate is worth precisely nothing unless the live engine and the backtest engine actually agree. Two independently written implementations of "the same" strategy is exactly the setup that produced the last disaster.
+  </p>
+
+  <p>
+    So the strategy is validated by replay: 6.9 years of real candles pushed through <code>bot.py</code>'s own <code>process()</code> function — the live code path, not a copy of it — and diffed against the backtest trade by trade.
+  </p>
+
+  <div class="perf-grid">
+    <div class="perf-card">
+      <div class="label">Starting gap</div>
+      <div class="value">$671</div>
+      <div class="desc">Between the two engines on first run</div>
+    </div>
+    <div class="perf-card highlight">
+      <div class="label">Final gap</div>
+      <div class="value">$0.00</div>
+      <div class="desc">126 of 126 trades, zero divergent</div>
+    </div>
+  </div>
+
+  <p>Closing that gap found three more real bugs, two of which were affecting live behaviour:</p>
+
+  <ul class="wins">
+    <li><strong>A ratchet guard that ran zero times.</strong> The condition <code>if pnl &gt; 0 or not (pnl &lt;= 0 and cb_pause_until)</code> meant that a loss closing during an <em>older</em> circuit-breaker pause never reached the position-sizing module at all. Calling it unconditionally, exactly once per trade, moved profit factor from 1.59 to 1.63.</li>
+    <li><strong>Corpus read at entry time rather than snapshotted at the candle open</strong> — the same-candle ordering problem from section 03. Found here, not by reading the code.</li>
+    <li><strong>A start-year mismatch</strong> between <code>.env</code> and the backtest harness. Unglamorous, and worth about a third of the initial gap.</li>
+  </ul>
+
+  <div class="pullquote">
+    <p>"Reproducing the backtest from the live code path is the only test that makes a paper-versus-benchmark gate mean anything."</p>
+  </div>
+
+  <p>
+    The honest footnote: <strong>the deprecated stop model is not engine-exact and never was.</strong> The bot prices a stop exit <em>at</em> the stop; the backtest prices it at the candle close, which by definition is past it. Over identical candles the bot finishes at $6,275 where its own backtest says $2,847. That gap is not a rounding difference, it is a systematic optimism — and it is a second, independent reason that model must not be run with real money.
+  </p>
+
+  <p>
+    The other honest footnote: <strong>there is no unit test suite.</strong> CI runs <code>flake8 --select=E9,F63,F7,F82</code> and <code>py_compile</code> — syntax errors and undefined names, nothing semantic. The replay harness is the test suite, and it is a good one for exactly one property. <code>size_position</code>, the circuit breaker, and the corpus ratchet are pure functions with obvious invariants and no excuse; they are the first three things I would test. Saying so is better than implying a coverage that isn't there.
+  </p>
+
+  <!-- 08 -->
+  <h2 id="infra"><span class="sec-num">08</span>Infrastructure That Won't Close Your Position</h2>
+
+  <p>
+    The deployment pipeline has one design goal that overrides the others: <strong>a code push must never be able to close a live position.</strong>
+  </p>
+
+  <div class="arch-box">
+    <pre><code><span class="label">Push to main</span>
+  <span class="arrow">│</span>
+  <span class="arrow">▼</span>
+<span class="service">1. Lint gate</span>          flake8 E9,F63,F7,F82 + py_compile × 4 modules
+  <span class="arrow">│</span>                    <span class="comment-line">deploy does not run if this fails</span>
+  <span class="arrow">▼</span>
+<span class="service">2. Detect changes</span>     git diff HEAD~1 HEAD → BOT / NOTIFIER / DASHBOARD / INFRA
+  <span class="arrow">│</span>
+  <span class="arrow">▼</span>
+<span class="service">3. 🔒 Safety gate</span>     read bot_state.json over SSH — position open?
+  <span class="arrow">│</span>                      <span class="comment-line">open → the bot container is NOT restarted,</span>
+  <span class="arrow">│</span>                      <span class="comment-line">even during a full infra rebuild.</span>
+  <span class="arrow">│</span>                      <span class="comment-line">Everything else rebuilds around it.</span>
+  <span class="arrow">▼</span>
+<span class="service">4. Copy</span>               scp an explicit allow-list — never "."
+  <span class="arrow">│</span>                      <span class="comment-line">.env on the server is NEVER overwritten</span>
+  <span class="arrow">▼</span>
+<span class="service">5. Selective restart</span>  only the services that actually changed
+  <span class="arrow">│</span>
+  <span class="arrow">▼</span>
+<span class="service">6. Health check</span>       docker inspect each container, dump logs on failure</code></pre>
+  </div>
+
+  <p>
+    Step 3 is the one I would defend in a review. A deploy is a routine, low-drama event right up until the moment it restarts a process that is holding a leveraged position, at which point it becomes a financial event.
+  </p>
+
+  <h3>The nginx bug that cost real hours</h3>
+
+  <p>
+    <code>nginx.conf</code>, the htpasswd file and the error pages are <strong>bind-mounted from disk</strong> rather than baked into the image. And <code>docker compose up</code> only recreates a container when the <em>service definition</em> changes — not when a bind-mounted file does.
+  </p>
+
+  <p>
+    So config edits were being copied to the server correctly, landing on disk correctly, and then never read by the running process. Every change appeared to deploy successfully and did nothing at all. CI now force-recreates nginx on any infrastructure change, which is a one-line fix for a failure mode that gives you no error message whatsoever.
+  </p>
+
+  <h3>Free tier, and the fight to get on it</h3>
+
+  <p>
+    Everything is Terraform against Oracle Cloud's always-free tier: VCN, gateway, route table, security list, subnet, and a <code>VM.Standard.A1.Flex</code> ARM instance. Six resources, one <code>apply</code>, <strong>$0 a month.</strong>
+  </p>
+
+  <p>
+    The shape is deliberately 1 OCPU and 6 GB rather than the full 4 and 24 the free tier allows — the always-free ARM pool is capacity-constrained, and a smaller shape schedules far more reliably. Getting an instance at all took a retry script cycling availability domains on a five-minute interval, a support ticket escalated to Sev-2, and eventually an upgrade to pay-as-you-go, which grants access to the paid capacity pool while staying inside always-free resource limits and therefore still billing nothing.
+  </p>
+
+  <p>
+    One line in that Terraform is worth more attention than it looks: <code>boot_volume_vpus_per_gb = 10</code>. Ten is "Balanced", which is always-free. Twenty is faster, looks like a harmless performance tweak, and silently starts charging you.
+  </p>
+
+  <h3>Public HTTPS with nothing listening</h3>
+
+  <p>
+    The dashboard is bound to <code>127.0.0.1</code> inside the host and reachable only through nginx. nginx is reachable only through a <strong>Cloudflare Tunnel</strong>, which is an <em>outbound</em> connection to Cloudflare's edge.
+  </p>
+
+  <p>
+    The result: real HTTPS on a real domain with <strong>zero inbound ports open</strong>, no certificate renewal cron, and the origin IP absent from DNS. The conventional alternative — certbot plus an open 443 — needs an inbound port, a 90-day renewal that will eventually fail on a holiday, and publishes your server's address to anyone who asks.
+  </p>
+
+  <!-- PASTE-IN: Terraform apply / OCI console screenshot.
+       Drop the file at /assets/images/quantbot/oci-instance.png and uncomment.
+  <figure class="screenshot">
+    <img src="/assets/images/quantbot/oci-instance.png" alt="Oracle Cloud console showing the VM.Standard.A1.Flex always-free ARM instance">
+    <figcaption>One always-free ARM instance — 1 OCPU, 6 GB, and a $0 monthly bill</figcaption>
+  </figure>
+  -->
+
+  <!-- PASTE-IN: GitHub Actions deploy run.
+       Drop the file at /assets/images/quantbot/actions-deploy.png and uncomment.
+  <figure class="screenshot">
+    <img src="/assets/images/quantbot/actions-deploy.png" alt="GitHub Actions deploy run showing the lint gate, change detection and open-position safety gate">
+    <figcaption>The pipeline in full — the safety gate reads the bot's own state file before deciding whether a restart is allowed</figcaption>
+  </figure>
+  -->
+
+  <h3>The control plane is a chat window</h3>
+
+  <p>
+    <code>notifier.py</code> pushes trade opens and closes, circuit-breaker trips, crash alerts, DCA contributions, RSI extremes, and a daily summary at 00:00 UTC. It also accepts commands — <code>/status</code>, <code>/balance</code>, <code>/pos</code>, <code>/pause</code>, <code>/resume</code> — using long-polling rather than a webhook, which means the control plane needs no inbound port either.
+  </p>
+
+  <p>
+    Every incoming command has its <code>chat_id</code> verified against the configured one; anything else is logged and dropped. The chat ID <em>is</em> the entire authorization model, which is honest about the scale this thing runs at: one operator, one account, one conversation.
+  </p>
+
+  <p>
+    <code>/pause</code> is the design detail I like most. It touches a flag file, and <code>bot.py</code> checks for that file before opening a position — but never before closing one. <strong>An operator kill-switch must not be able to trap a live trade.</strong> Pausing stops the bot taking new risk; it does not strand the risk already on the table.
+  </p>
+
+  <!-- PASTE-IN: Telegram alerts screenshot.
+       Drop the file at /assets/images/quantbot/telegram-alerts.png and uncomment.
+  <figure class="screenshot">
+    <img src="/assets/images/quantbot/telegram-alerts.png" alt="Telegram alerts from QuantBot showing a trade open, a trade close with P&L, and the daily summary">
+    <figcaption>The whole control plane — alerts out, commands in, and no inbound port on either path</figcaption>
+  </figure>
+  -->
+
+  <!-- 09 -->
+  <h2 id="gap"><span class="sec-num">09</span>The Gap Between the Repo and the Machine</h2>
+
+  <p>This post would be dishonest without the following section, which is also the most useful one in it.</p>
+
+  <p>
+    CI <strong>deliberately never overwrites the server's <code>.env</code></strong>. That is how exchange keys and strategy parameters stay out of the repository, and it is the right call. The consequence is that a strategy change committed to git is <em>invisible to production</em>, and nothing anywhere warns you about it.
+  </p>
+
+  <p>
+    So the repository says <code>EXIT_MODEL=nostop</code> at 5×. The deployed <code>.env</code> has no <code>EXIT_MODEL</code> key at all — which means it falls back to the code default of <code>stop</code>, at <code>LEVERAGE=20</code>, on the pre-August ATR multipliers. <strong>The dashboard you can open right now is running the configuration that was rejected.</strong>
+  </p>
+
+  <figure class="screenshot">
+    <img src="/assets/images/quantbot/dashboard-overview.jpg" alt="The QuantBot dashboard Overview tab showing balance, net profit, a 14.3% win rate against a 54% benchmark, and the equity curve">
+    <figcaption>Win rate 14.3% against a 54.0% benchmark — and an annualised figure nobody should believe, because this is not the validated config</figcaption>
+  </figure>
+
+  <p>
+    Note what that dashboard is honestly telling on itself about. A 14.3% win rate sits beside its own benchmark of 54.0%, so the comparison is right there. But the top row also reports <strong>+608.8% total return</strong> and an annualised <strong>+1,379%</strong> from seven trades — a number that is arithmetically correct and epistemically worthless. The dashboard suppresses annualisation below 30 days or 5 trades; 161 days and 7 trades clears both gates and produces nonsense anyway. Thresholds are not judgement.
+  </p>
+
+  <figure class="screenshot">
+    <img src="/assets/images/quantbot/dashboard-trade-log.jpg" alt="QuantBot trade log showing seven paper trades: six losses closed at the stop and one large win held for 3,555 candles">
+    <figcaption>Seven paper trades from the deployed config — which is not the validated one. Six losses at the stop, and one +$1,006 win held 37 days. That is the robustness failure that got this model rejected, reproducing itself live</figcaption>
+  </figure>
+
+  <p>
+    And that is the part I find genuinely valuable. The robustness suite rejected the stop model because <em>its entire net profit was one trade.</em> Seven live paper trades later, the deployed bot has independently reproduced exactly that shape: one winner carrying six losers, and a monthly P&amp;L chart that is a single green bar in a row of red ones.
+  </p>
+
+  <p>
+    A backtest finding and a live result agreeing on a failure mode is close to the best validation available — even when the thing being validated is <em>"do not run this."</em>
+  </p>
+
+  <p>
+    The fix is four lines in a file on one VM plus a state reset, and it is the top item on the roadmap. But "the repository and the machine disagree, and no tooling anywhere notices" is a real class of production problem that outlives this project. The durable fix is not to remember harder; it is to have the bot log its full effective configuration at startup, so the log itself is auditable and the drift shows up the first time anyone looks.
+  </p>
+
+  <figure class="screenshot">
+    <img src="/assets/images/quantbot/dashboard-rsi-radar.jpg" alt="QuantBot RSI Radar tab showing monthly and weekly RSI gauges for BTC, ETH, SOL, BNB, XRP and SUI">
+    <figcaption>The RSI Radar — monthly and weekly readings across six spot pairs, scanned every four hours. Independent of the trading config, and the half of the dashboard that is unaffected by any of the above</figcaption>
+  </figure>
+
+  <h3>The rest of the honest list</h3>
+
+  <ul class="roadmap">
+    <li><span class="rm-tag next">Blocker</span><span><strong>The CI safety gate fails open.</strong> The open-position probe runs as a bare <code>docker exec</code> with errors swallowed into <code>|| echo "none"</code>. If the deploy user ever lost docker-group membership, the probe would error, report "no position", and restart the bot mid-trade. A safety gate must fail <em>closed</em>.</span></li>
+    <li><span class="rm-tag next">Blocker</span><span><strong>State writes are not atomic.</strong> <code>save_state</code> writes straight over <code>bot_state.json</code> with no temp file and no backup. A crash mid-write corrupts it. Write to <code>.tmp</code> and <code>os.replace</code> — five lines.</span></li>
+    <li><span class="rm-tag">Deploy</span><span><strong>The containerised bot cannot trade live as configured.</strong> The Dockerfile's <code>CMD</code> has no <code>--live</code> flag and compose overrides no command, so the container runs in paper mode whatever <code>.env</code> says. That is fail-safe in the right direction, and it is also the least obvious step in the entire go-live checklist.</span></li>
+    <li><span class="rm-tag">Security</span><span><strong>The dashboard is public and unauthenticated.</strong> <code>auth_basic</code> is fully wired into the nginx config and deliberately commented out for the building-in-public phase. It renders balances and positions but never keys — a disclosure choice, not a leak. It gets switched back on before real capital.</span></li>
+      <li><span class="rm-tag">Security</span><span><strong>Every container gets the same <code>.env</code></strong>, so exchange keys sit in the environment of two processes that never trade — one of which serves internet traffic. Split into <code>.env.bot</code> and <code>.env.shared</code>.</span></li>
+    <li><span class="rm-tag">Quality</span><span><strong>Benchmarks are duplicated</strong> in the bot and the dashboard, and leverage is read independently by a third place. Three values to keep in sync by hand is two too many.</span></li>
+  </ul>
+
+  <div class="callout warn">
+    <div class="callout-title">Stating the obvious, because it is a trading bot</div>
+    <p>
+      None of this is financial advice. Backtested performance is a measurement of how a set of rules would have behaved on data that has already happened — it is not a prediction, and this post is substantially about how wrong such a measurement can be while looking entirely healthy. The project runs in paper mode; no real capital is deployed.
+    </p>
+  </div>
+
+  <hr>
+
+  <h2>Why the Smaller Number Is the Better One</h2>
+
+  <p>
+    The version of this post I could have written a month earlier had far better numbers in it. <strong>$9,347. +90.7% a year. A profit factor of 1.60 across two bull markets and a bear.</strong> Every one of those was false, and not one of them was false because anyone was trying to fool anyone. They were false because two bugs cancelled in the exact place I had thought to look.
+  </p>
+
+  <p>
+    What replaced them: +13.7% a year, eighteen trades a year, a 25.5% maximum drawdown, and a live engine that reproduces its own backtest to the cent across 126 trades. That is a substantially less impressive set of numbers and the first set I have any reason to believe.
+  </p>
+
+  <p>
+    The transferable lesson is not about trading. It is that <strong>a derived metric with no independent check on it is a rumour with a decimal point.</strong> The check that eventually worked was not a unit test and could not have been — it was reproducing the same result through a second, independently written code path and refusing to accept anything less than agreement to the cent. When they disagreed, the disagreement handed over three more bugs.
+  </p>
+
+  <p>
+    And a cheaper lesson, which cost less and has been more immediately useful since: <strong>when a number looks absurd, solve the arithmetic backwards from whichever field has the fewest terms in it.</strong> A $7 position cannot lose $15. The fee column was the only one with no leverage anywhere in it, and the fee column is what gave the bug up.
+  </p>
+
+  <div class="cta-box">
+    <h3>Read the code, or watch it trade</h3>
+    <p>The bot, the notifier, the dashboard, the Terraform module, the multi-stage Dockerfile and the deployment pipeline are all in the repository. The dashboard is live and read-only — including, currently, its own configuration drift.</p>
+    <div class="cta-links">
+      <a class="cta-btn primary" href="https://github.com/Asit0007/QuantBot" target="_blank">GitHub — QuantBot</a>
+      <a class="cta-btn secondary" href="https://quantbot.asitminz.com" target="_blank">Live dashboard</a>
+      <a class="cta-btn secondary" href="mailto:asitminz007@gmail.com">Get in touch</a>
+    </div>
+  </div>
+
+  <div class="footnote">
+    <span>Python 3.11 · Docker Compose v2 · Terraform ~&gt;5.0 OCI · Always-Free ARM · Cloudflare Tunnel</span>
+    <span>Asit Minz · September 2026</span>
+  </div>
+
+</main>
+
+<footer class="site-footer" style="border-top:1px solid var(--rule); padding:2rem; text-align:center; font-size:0.78rem; color:var(--ink-muted);">
+  <p>
+    Built by <a href="https://github.com/Asit0007" target="_blank">Asit Minz</a> ·
+    <a href="mailto:asitminz007@gmail.com">asitminz007@gmail.com</a>
+  </p>
+</footer>
+
+</body>
+</html>
