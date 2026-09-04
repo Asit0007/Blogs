@@ -10,13 +10,16 @@ Static HTML, served by GitHub Pages from the repo root. No build step.
 ## Layout
 
 ```
-index.html              home — positioning, pillars, Cold Start capture, writing list
-about/index.html        the story (DRAFT — see BRAND.md)
-posts/<slug>/index.html  one self-contained page per post
-assets/css/tokens.css   shared design tokens (light + warm-dark)
-assets/images/<slug>/    per-post figures
-BRAND.md                 brand reference — read before changing anything visual
-CNAME                    blogs.asitminz.com
+index.html                home — positioning, pillars, Cold Start capture, writing list
+about/index.html          the story (DRAFT — Asit's to edit; see BRAND.md)
+posts/<slug>/index.html   one self-contained page per post
+favicon.svg               the mark — lowercase "a" + ember caret, on every page
+assets/brand/mark*.svg    full-res logomark (ink + paper), JetBrains Mono "a" embedded
+assets/css/tokens.css     shared design tokens (light + warm-dark)
+assets/og/template.html   1200x630 OG-image template (screenshot to PNG per post)
+assets/images/<slug>/     per-post figures
+BRAND.md                  brand reference — read before changing anything visual
+CNAME                     blogs.asitminz.com
 ```
 
 ## Working on it
@@ -28,8 +31,10 @@ python3 -m http.server 8000   # then http://localhost:8000
 ```
 
 Design decisions live in [`BRAND.md`](BRAND.md); the full system is the Visual
-Identity Kit. Keep to three typefaces (DM Serif Display / DM Sans / JetBrains
-Mono), one ember accent, no gradients.
+Identity Kit (a separate artifact). **Read `BRAND.md` before any visual change.**
+The rules that don't bend: three typefaces (DM Serif Display / DM Sans / JetBrains
+Mono), one ember accent (`#c84b11`), one functional green, **no gradients**. The
+mark is the lowercase `a` + ember caret in a rounded square.
 
 ## Posts
 
