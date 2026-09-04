@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OG template</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Screenshot this at exactly 1200x630. Edit .title / .eyebrow per post.
+     One per post: essay title in serif, "asit minz" mono bottom-left, ember rule. */
+  * { margin: 0; box-sizing: border-box; }
+  body { width: 1200px; height: 630px; overflow: hidden; }
+  .card {
+    width: 1200px; height: 630px;
+    background: #faf9f6; color: #0f0f0e;
+    font-family: 'DM Serif Display', serif;
+    padding: 72px 80px;
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px; font-weight: 500;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: #8a8578;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .eyebrow::before { content: ""; width: 52px; height: 2px; background: #c84b11; }
+  .title {
+    font-size: 86px; line-height: 1.08; letter-spacing: -0.02em;
+    margin-top: 40px; max-width: 1000px;
+  }
+  .title em { font-style: italic; color: #c84b11; }
+  .foot {
+    margin-top: auto; padding-top: 28px; border-top: 1px solid #e2dfd6;
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: 'JetBrains Mono', monospace; font-size: 22px;
+    letter-spacing: 0.03em; color: #7a756a;
+  }
+  .wm { color: #0f0f0e; display: inline-flex; align-items: baseline; }
+  .wm .caret { display: inline-block; width: 9px; height: 24px; background: #c84b11; margin-left: 5px; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="eyebrow">Cold Start &middot; Build Log</div>
+    <div class="title">Automate everything <em>except</em> the publish button</div>
+    <div class="foot">
+      <span class="wm">asit minz<span class="caret"></span></span>
+      <span>blogs.asitminz.com</span>
+    </div>
+  </div>
+</body>
+</html>

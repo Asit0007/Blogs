@@ -1,0 +1,102 @@
+/* ============================================================
+   Asit Minz — shared design tokens
+   Evolved from the original blog system. Single source of truth
+   for color + type. Companion: BRAND.md, and the Visual Identity Kit.
+   ============================================================ */
+
+:root {
+  /* ink + ground */
+  --ink:        #0f0f0e;
+  --ink-mid:    #3a3a36;
+  --ink-muted:  #7a756a;   /* warm-biased neutral — not a pure grey */
+  --ink-faint:  #b5b1a6;
+  --bg:         #faf9f6;   /* paper */
+  --bg-card:    #ffffff;
+  --bg-sink:    #f2f0ea;
+  --bg-code:    #efece4;
+  --rule:       #e2dfd6;
+
+  /* the one accent */
+  --ember:      #c84b11;
+  --ember-soft: #f2ddd3;
+
+  /* the one functional colour */
+  --signal:     #1a6b4a;
+  --signal-soft:#d8ede3;
+
+  /* diagram / technical neutral */
+  --wire:       #8a8578;
+
+  /* legacy aliases kept so older inline styles still resolve */
+  --accent:      var(--ember);
+  --accent-soft: var(--ember-soft);
+  --accent-2:      var(--signal);
+  --accent-2-soft: var(--signal-soft);
+
+  /* type */
+  --font-serif: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+  --font-sans:  'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono:  'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --measure: 68ch;
+}
+
+/* Warm-dark rendering for readers whose OS asks for it.
+   The site is a light editorial publication by intent; this is a
+   faithful dark counterpart, not an inversion. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink:        #ece9e2;
+    --ink-mid:    #b8b3a8;
+    --ink-muted:  #8b8578;
+    --ink-faint:  #5c5850;
+    --bg:         #141310;   /* warm near-black, never #000 */
+    --bg-card:    #1e1c18;
+    --bg-sink:    #100f0c;
+    --bg-code:    #201d18;
+    --rule:       #332f28;
+    --ember:      #e0602a;
+    --ember-soft: #3a231a;
+    --signal:     #3fae82;
+    --signal-soft:#17332a;
+    --wire:       #6f6a5e;
+  }
+}
+
+/* ---- shared components -------------------------------------- */
+
+.wordmark {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+}
+.wordmark .caret {
+  display: inline-block;
+  width: 0.5ch;
+  height: 0.8em;
+  background: var(--ember);
+  margin-left: 0.14em;
+  translate: 0 0.06em;
+  animation: am-blink 1.06s steps(1) infinite;
+}
+@keyframes am-blink { 0%,50% { opacity: 1; } 50.01%,100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .wordmark .caret { animation: none; } }
+
+/* mono eyebrow: short rule + uppercase ember label */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ember);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.eyebrow::before { content: ""; width: 22px; height: 1px; background: var(--ember); }

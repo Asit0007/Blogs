@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <title>The Backtest That Lied — Asit Minz</title>
 <meta name="description" content="QuantBot: an automated BTC futures bot on free-tier ARM. A backtest said +90.7%/yr. The real figure was +13.7%. How two cancelling bugs hid inside a working invariant for months — and what it takes to trust a number you generated yourself.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -785,8 +786,9 @@
 <header class="site-header">
   <a class="logo" href="/">Asit Minz</a>
   <nav>
+    <a href="/about/">About</a>
     <a href="https://github.com/Asit0007" target="_blank">GitHub</a>
-    <a href="https://linkedin.com/in/" target="_blank">LinkedIn</a>
+    <a href="https://linkedin.com/in/asitminz" target="_blank">LinkedIn</a>
     <a href="mailto:asitminz007@gmail.com">Contact</a>
   </nav>
 </header>
@@ -1278,12 +1280,22 @@ qty      = notional / price</code></pre>
   </p>
 
   <p>
-    The shape is deliberately 1 OCPU and 6 GB rather than the full 4 and 24 the free tier allows — the always-free ARM pool is capacity-constrained, and a smaller shape schedules far more reliably. Getting an instance at all took a retry script cycling availability domains on a five-minute interval, a support ticket escalated to Sev-2, and eventually an upgrade to pay-as-you-go, which grants access to the paid capacity pool while staying inside always-free resource limits and therefore still billing nothing.
+    The shape is deliberately 1 OCPU and 6 GB rather than the full 4 and 24 the free tier allows — the always-free ARM pool is capacity-constrained, and a smaller shape schedules far more reliably. Getting an instance at all took a retry script polling for capacity on a five-minute interval, a support ticket escalated to Sev-2, and eventually an upgrade to pay-as-you-go, which grants access to the paid capacity pool. What that troubleshooting didn't fix — and what writing this section is what finally caught — is which <em>region</em> the instance actually landed in. More on that below.
   </p>
 
   <p>
-    One line in that Terraform is worth more attention than it looks: <code>boot_volume_vpus_per_gb = 10</code>. Ten is "Balanced", which is always-free. Twenty is faster, looks like a harmless performance tweak, and silently starts charging you.
+    One line in that Terraform is worth more attention than it looks: <code>boot_volume_vpus_per_gb = 10</code>. Ten is "Balanced", which is always-free — <em>inside your home region.</em> Twenty is faster, looks like a harmless performance tweak, and silently starts charging you regardless of region. That caveat turns out to matter more than the line itself.
   </p>
+
+  <div class="callout warn">
+    <div class="callout-title">Correction — 2026-09-03</div>
+    <p>
+      The "$0 a month" three paragraphs up is not currently true, and drafting this section is what caught it. <strong>Always Free eligibility applies only inside your tenancy's home region</strong> — not wherever a free-eligible shape happens to be running. This tenancy's home region is <code>ap-hyderabad-1</code>. When Hyderabad's A1.Flex capacity ran out, the instance went up in <code>ap-singapore-1</code> instead — a perfectly normal subscribed region, and not the home region. Nothing about that deployment has been Always Free since the day it launched: not the compute, not the <code>10 VPUs/GB</code> boot volume from the paragraph above. Both have been billing at standard pay-as-you-go rates the whole time, quietly, because nothing in the console flags a free-eligible shape running in the wrong region as anything other than normal.
+    </p>
+    <p style="margin-top:0.9rem;">
+      There's no settings change that fixes this — Always Free is regional, so an out-of-region instance can't be made retroactively free. The fix is a straight migration back to <code>ap-hyderabad-1</code>, which is in progress as of this correction. Until it lands, read every <code>$0/month</code> figure on this page as the design target this architecture is built for, not the current invoice.
+    </p>
+  </div>
 
   <h3>Public HTTPS with nothing listening</h3>
 

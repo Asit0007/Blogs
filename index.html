@@ -3,41 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Asit Minz — Engineering Blog</title>
-<meta name="description" content="Infrastructure engineering, DevOps, and backend systems — written by Asit Minz.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>Asit Minz — Building &amp; explaining AI systems</title>
+<meta name="description" content="I build AI systems solo under hard constraints and write down what actually happens when they run. Production experience, not tutorials.">
+<link rel="canonical" href="https://blogs.asitminz.com/">
+<meta name="theme-color" content="#faf9f6">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Asit Minz — Building &amp; explaining AI systems">
+<meta property="og:description" content="I build AI systems solo under hard constraints and write down what actually happens when they run. Production experience, not tutorials.">
+<meta property="og:url" content="https://blogs.asitminz.com/">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --ink: #0f0f0e;
-    --ink-mid: #3a3a36;
-    --ink-muted: #7a7a72;
-    --ink-faint: #b5b5ac;
-    --bg: #faf9f6;
-    --bg-card: #ffffff;
-    --bg-code: #f0ede6;
-    --rule: #e2dfd6;
-    --accent: #c84b11;
-    --accent-soft: #f2ddd3;
-    --accent-2: #1a6b4a;
-    --accent-2-soft: #d3efe4;
-    --blue: #1a4a8a;
-    --blue-soft: #d6e4f7;
-  }
-
   html { font-size: 18px; scroll-behavior: smooth; }
-
   body {
     background: var(--bg);
     color: var(--ink);
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-sans);
     font-weight: 400;
-    line-height: 1.75;
+    line-height: 1.7;
     -webkit-font-smoothing: antialiased;
     min-height: 100vh;
   }
+  a { color: var(--ember); text-decoration: none; }
 
   /* ── HEADER ── */
   .site-header {
@@ -51,611 +43,382 @@
     top: 0;
     z-index: 100;
   }
-  .site-header .logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.1rem;
-    color: var(--ink);
-    text-decoration: none;
-    letter-spacing: -0.01em;
-  }
+  .site-header .wordmark { font-size: 1.05rem; }
+  .site-header .wordmark .caret { height: 0.78em; }
   .site-header nav a {
     color: var(--ink-muted);
-    text-decoration: none;
-    font-size: 0.82rem;
-    margin-left: 1.5rem;
-    letter-spacing: 0.04em;
+    font-size: 0.78rem;
+    margin-left: 1.4rem;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    font-weight: 500;
+    font-family: var(--font-mono);
     transition: color 0.2s;
   }
-  .site-header nav a:hover { color: var(--accent); }
+  .site-header nav a:hover { color: var(--ember); }
 
-  /* ── PAGE INTRO ── */
-  .page-intro {
-    max-width: 860px;
+  /* ── HERO ── */
+  .hero {
+    max-width: 900px;
     margin: 0 auto;
-    padding: 4.5rem 2rem 3rem;
+    padding: clamp(3.5rem, 8vw, 6rem) 2rem clamp(2.5rem, 5vw, 4rem);
     border-bottom: 1px solid var(--rule);
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 2rem;
-    align-items: end;
   }
-
-  .intro-eyebrow {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    font-weight: 500;
-    color: var(--accent);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .intro-eyebrow::before {
-    content: '';
-    display: inline-block;
-    width: 20px;
-    height: 1px;
-    background: var(--accent);
-  }
-
+  .hero .eyebrow { margin-bottom: 1.6rem; }
   h1.page-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(2.2rem, 4vw, 3.2rem);
-    line-height: 1.15;
+    font-family: var(--font-serif);
+    font-size: clamp(2.1rem, 5vw, 3.4rem);
+    line-height: 1.12;
     letter-spacing: -0.025em;
     color: var(--ink);
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.4rem;
+    max-width: 20ch;
+    text-wrap: balance;
   }
-  h1.page-title em {
-    font-style: italic;
-    color: var(--accent);
+  h1.page-title em { font-style: italic; color: var(--ember); }
+  .hero-desc {
+    font-size: 1.08rem;
+    color: var(--ink-mid);
+    max-width: 60ch;
+    line-height: 1.6;
   }
-
-  .page-desc {
-    font-size: 1rem;
-    color: var(--ink-muted);
-    max-width: 520px;
-    line-height: 1.65;
-  }
-
-  .author-card {
-    background: var(--bg-card);
-    border: 1px solid var(--rule);
-    border-radius: 10px;
-    padding: 1.25rem 1.5rem;
-    text-align: center;
-    min-width: 180px;
-    flex-shrink: 0;
-  }
-  .author-avatar {
-    width: 52px; height: 52px;
-    background: linear-gradient(135deg, #c84b11 0%, #7a2800 100%);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.1rem;
-    color: white;
-    margin: 0 auto 0.75rem;
-  }
-  .author-card .name {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--ink);
-    line-height: 1.2;
-    margin-bottom: 0.25rem;
-  }
-  .author-card .role {
-    font-size: 0.72rem;
-    color: var(--ink-muted);
-    line-height: 1.4;
-  }
-  .author-links {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: center;
-    margin-top: 0.9rem;
-  }
-  .author-links a {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
-    font-weight: 500;
-    color: var(--ink-muted);
-    text-decoration: none;
-    border: 1px solid var(--rule);
-    padding: 0.25em 0.65em;
-    border-radius: 3px;
-    transition: all 0.2s;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-  .author-links a:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  /* ── FILTER BAR ── */
-  .filter-bar {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 1.25rem 2rem;
-    border-bottom: 1px solid var(--rule);
+  .hero-desc strong { color: var(--ink); font-weight: 600; }
+  .byline {
+    margin-top: 2.2rem;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+  }
+  .byline .avatar {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--ink); color: var(--bg);
+    display: flex; align-items: baseline; justify-content: center;
+    font-family: var(--font-mono); font-weight: 700; font-size: 1.05rem;
+    padding-top: 0.55rem; flex-shrink: 0;
+  }
+  .byline .who { color: var(--ink); font-weight: 600; }
+  .byline .links { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .byline .links a {
+    font-family: var(--font-mono); font-size: 0.68rem;
+    color: var(--ink-muted); border: 1px solid var(--rule);
+    padding: 0.25em 0.6em; border-radius: 3px;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    transition: all 0.2s;
+  }
+  .byline .links a:hover { border-color: var(--ember); color: var(--ember); }
+
+  /* ── SHARED SECTION ── */
+  .band { max-width: 900px; margin: 0 auto; padding: clamp(3rem, 6vw, 4.5rem) 2rem; border-bottom: 1px solid var(--rule); }
+  .band > .eyebrow { margin-bottom: 1.5rem; }
+  .band h2 {
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    margin-bottom: 0.9rem;
+    text-wrap: balance;
+  }
+  .band h2 em { font-style: italic; color: var(--ember); }
+  .band .band-sub { color: var(--ink-mid); max-width: var(--measure); font-size: 0.98rem; }
+
+  /* ── PILLARS ── */
+  .pillars {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .pillar {
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 1.4rem 1.3rem;
+    background: var(--bg-card);
+  }
+  .pillar .n {
+    font-family: var(--font-mono); font-size: 0.68rem; color: var(--ember);
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .pillar h3 {
+    font-family: var(--font-serif); font-weight: 400; font-size: 1.15rem;
+    margin: 0.5rem 0 0.5rem; letter-spacing: -0.01em; line-height: 1.25;
+  }
+  .pillar p { font-size: 0.86rem; color: var(--ink-muted); line-height: 1.55; }
+  @media (max-width: 720px) { .pillars { grid-template-columns: 1fr; } }
+
+  /* ── NEWSLETTER ── */
+  .newsletter { background: var(--bg-sink); }
+  .newsletter form {
+    margin-top: 1.6rem;
+    display: flex;
+    gap: 0.6rem;
+    max-width: 460px;
     flex-wrap: wrap;
   }
-  .filter-label {
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: var(--ink-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    margin-right: 0.25rem;
-  }
-  .filter-btn {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 500;
-    padding: 0.3em 0.85em;
-    border-radius: 3px;
+  .newsletter input[type=email] {
+    flex: 1 1 220px;
+    font-family: var(--font-sans);
+    font-size: 0.92rem;
+    padding: 0.7em 0.9em;
     border: 1px solid var(--rule);
-    background: transparent;
-    color: var(--ink-muted);
-    cursor: pointer;
-    transition: all 0.18s;
-    letter-spacing: 0.02em;
-  }
-  .filter-btn:hover { border-color: var(--ink-mid); color: var(--ink); }
-  .filter-btn.active { background: var(--ink); color: white; border-color: var(--ink); }
-
-  /* ── POST COUNT ── */
-  .posts-header {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 2rem 2rem 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-  }
-  .posts-count {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--ink-muted);
-    letter-spacing: 0.04em;
-  }
-  .posts-count span { color: var(--ink); font-weight: 500; }
-
-  /* ── POST LIST ── */
-  .posts-list {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 0 2rem 5rem;
-  }
-
-  /* Featured post — first one, larger */
-  .post-card.featured {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    border-radius: 5px;
     background: var(--bg-card);
-    border: 1px solid var(--rule);
-    border-radius: 10px;
-    padding: 2rem 2.25rem;
-    margin-bottom: 1.5rem;
-    text-decoration: none;
-    color: inherit;
-    transition: border-color 0.2s, transform 0.2s;
-    position: relative;
-    overflow: hidden;
+    color: var(--ink);
   }
-  .post-card.featured::before {
-    content: 'Featured';
-    position: absolute;
-    top: 1.25rem;
-    right: 1.5rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.62rem;
-    font-weight: 500;
-    color: var(--accent);
-    letter-spacing: 0.08em;
+  .newsletter input[type=email]:focus-visible { outline: 2px solid var(--ember); outline-offset: 1px; }
+  .newsletter button {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    background: var(--accent-soft);
-    padding: 0.2em 0.6em;
-    border-radius: 2px;
+    padding: 0.7em 1.3em;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: opacity 0.2s;
   }
-  .post-card.featured:hover {
-    border-color: var(--ink-mid);
-    transform: translateY(-2px);
-  }
+  .newsletter button:hover { opacity: 0.85; }
+  .newsletter .fineprint { margin-top: 0.8rem; font-family: var(--font-mono); font-size: 0.68rem; color: var(--ink-faint); }
 
-  /* Regular post card */
+  /* ── WRITING LIST ── */
+  .posts { max-width: 900px; margin: 0 auto; padding: clamp(3rem, 6vw, 4.5rem) 2rem clamp(4rem, 8vw, 6rem); }
+  .posts > .eyebrow { margin-bottom: 1.5rem; }
+  .posts > h2 {
+    font-family: var(--font-serif); font-size: clamp(1.5rem, 3vw, 2rem);
+    letter-spacing: -0.015em; margin-bottom: 0.6rem; text-wrap: balance;
+  }
+  .posts > .band-sub { color: var(--ink-mid); max-width: var(--measure); margin-bottom: 2.2rem; font-size: 0.98rem; }
+
   .post-card {
     display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 0 1.75rem;
+    grid-template-columns: 2.5rem 1fr auto;
+    gap: 0 1.5rem;
     align-items: start;
-    padding: 1.5rem 0;
-    border-bottom: 1px solid var(--rule);
-    text-decoration: none;
+    padding: 1.5rem 0.75rem;
+    border-top: 1px solid var(--rule);
     color: inherit;
     transition: background 0.15s;
     border-radius: 6px;
     margin: 0 -0.75rem;
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
   }
+  .post-card:last-child { border-bottom: 1px solid var(--rule); }
   .post-card:hover { background: var(--bg-card); }
-  .post-card:last-child { border-bottom: none; }
-
-  /* Post number */
   .post-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2rem;
-    color: var(--ink-faint);
-    line-height: 1;
-    padding-top: 0.15rem;
-    min-width: 2rem;
-    text-align: right;
+    font-family: var(--font-serif); font-size: 1.6rem; color: var(--ink-faint);
+    line-height: 1; padding-top: 0.15rem; text-align: right;
     transition: color 0.2s;
   }
-  .post-card:hover .post-num { color: var(--accent); }
-
-  /* Post body */
-  .post-body {}
-
-  .post-tags {
-    display: flex;
-    gap: 0.4rem;
-    flex-wrap: wrap;
-    margin-bottom: 0.6rem;
-  }
+  .post-card:hover .post-num { color: var(--ember); }
+  .post-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.55rem; }
   .tag {
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    padding: 0.25em 0.7em;
-    border-radius: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.62rem; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 0.25em 0.6em; border-radius: 2px;
+    border: 1px solid var(--rule); color: var(--ink-muted);
   }
-  .tag.devops   { background: var(--accent-soft); color: var(--accent); }
-  .tag.infra    { background: var(--accent-2-soft); color: var(--accent-2); }
-  .tag.security { background: #fef3e2; color: #92520a; }
-  .tag.cloud    { background: var(--blue-soft); color: var(--blue); }
-  .tag.db       { background: #f0edf8; color: #4a2d8a; }
-  .tag.ci-cd    { background: #e8f5f0; color: #0d5c3a; }
-
+  .tag.ai { border-color: var(--ember); color: var(--ember); }
+  .tag.sig { border-color: var(--signal); color: var(--signal); }
   .post-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.25rem;
-    font-weight: 400;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-    line-height: 1.3;
-    margin-bottom: 0.5rem;
-    transition: color 0.2s;
+    font-family: var(--font-serif); font-size: 1.3rem; font-weight: 400;
+    letter-spacing: -0.01em; color: var(--ink); line-height: 1.28;
+    margin-bottom: 0.45rem; transition: color 0.2s;
   }
-  .post-card:hover .post-title { color: var(--accent); }
-  .post-card.featured .post-title { font-size: 1.5rem; }
-
-  .post-excerpt {
-    font-size: 0.88rem;
-    color: var(--ink-muted);
-    line-height: 1.6;
-    margin-bottom: 0.75rem;
-  }
-
+  .post-card:hover .post-title { color: var(--ember); }
+  .post-excerpt { font-size: 0.9rem; color: var(--ink-muted); line-height: 1.6; margin-bottom: 0.7rem; max-width: 62ch; }
   .post-meta {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    color: var(--ink-faint);
-    font-family: 'JetBrains Mono', monospace;
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.72rem; color: var(--ink-faint); font-family: var(--font-mono);
   }
-  .post-meta .dot { width: 2px; height: 2px; background: var(--ink-faint); border-radius: 50%; }
-  .post-meta .read-time { color: var(--ink-muted); }
+  .post-meta .dot { width: 2px; height: 2px; background: currentColor; border-radius: 50%; }
+  .post-arrow { font-size: 1rem; color: var(--ink-faint); padding-top: 0.3rem; transition: all 0.2s; }
+  .post-card:hover .post-arrow { color: var(--ember); transform: translateX(3px); }
 
-  /* Arrow on list cards */
-  .post-arrow {
-    font-size: 1rem;
-    color: var(--ink-faint);
-    transition: all 0.2s;
-    padding-top: 0.25rem;
-    flex-shrink: 0;
-  }
-  .post-card:hover .post-arrow { color: var(--accent); transform: translate(3px, -1px); }
-
-  /* Featured card specific overrides */
-  .post-card.featured .post-body { grid-column: span 1; }
-  .post-card.featured .feat-visual {
-    background: var(--bg);
-    border-radius: 6px;
+  .post-card.featured {
+    grid-template-columns: 1fr;
+    background: var(--bg-card);
     border: 1px solid var(--rule);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 1.5rem;
-    gap: 0.75rem;
+    border-radius: 10px;
+    padding: 1.8rem 2rem;
+    margin-bottom: 1.25rem;
+    position: relative;
   }
-  .feat-stat {
-    text-align: center;
+  .post-card.featured::after {
+    content: 'Start here';
+    position: absolute; top: 1.4rem; right: 1.6rem;
+    font-family: var(--font-mono); font-size: 0.6rem; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ember); background: var(--ember-soft);
+    padding: 0.2em 0.6em; border-radius: 2px;
   }
-  .feat-stat .val {
-    font-family: 'DM Serif Display', serif;
-    font-size: 2rem;
-    color: var(--accent-2);
-    line-height: 1;
-    margin-bottom: 0.2rem;
+  .post-card.featured .post-num { display: none; }
+  .post-card.featured .post-title { font-size: 1.6rem; }
+  .post-card.featured .post-arrow { display: none; }
+  .featured-stats {
+    display: flex; gap: 1.75rem; margin-top: 1rem; flex-wrap: wrap;
+    padding-top: 1rem; border-top: 1px solid var(--rule);
   }
-  .feat-stat .lbl {
-    font-size: 0.7rem;
-    color: var(--ink-muted);
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-  .feat-divider { width: 1px; height: 40px; background: var(--rule); }
-  .feat-visual-row { display: flex; align-items: center; gap: 0.75rem; }
-
-  /* Stack pills in featured */
-  .stack-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    margin-top: 0.5rem;
-  }
-  .pill {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.65rem;
-    padding: 0.2em 0.55em;
-    border: 1px solid var(--rule);
-    border-radius: 3px;
-    color: var(--ink-muted);
-    background: var(--bg);
-  }
-
-  /* ── COMING SOON CARD ── */
-  .post-card.coming-soon {
-    opacity: 0.45;
-    pointer-events: none;
-    cursor: default;
-  }
-  .post-card.coming-soon .post-arrow { display: none; }
-  .soon-badge {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.62rem;
-    color: var(--ink-muted);
-    border: 1px dashed var(--rule);
-    padding: 0.2em 0.6em;
-    border-radius: 2px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    padding-top: 0.3rem;
+  .featured-stats .s .v { font-family: var(--font-serif); font-size: 1.3rem; color: var(--signal); line-height: 1; }
+  .featured-stats .s .v.hot { color: var(--ember); }
+  .featured-stats .s .l { font-family: var(--font-mono); font-size: 0.62rem; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.25rem; }
+  @media (max-width: 620px) {
+    .post-card { grid-template-columns: 1fr; }
+    .post-num { display: none; }
+    .post-arrow { display: none; }
   }
 
   /* ── FOOTER ── */
   .site-footer {
     border-top: 1px solid var(--rule);
-    padding: 2rem;
+    padding: 2.5rem 2rem;
     text-align: center;
-    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
     color: var(--ink-muted);
+    line-height: 1.9;
   }
-  .site-footer a { color: var(--ink-muted); text-decoration: none; border-bottom: 1px solid var(--rule); transition: color 0.2s; }
-  .site-footer a:hover { color: var(--accent); }
+  .site-footer a { color: var(--ink-mid); border-bottom: 1px solid var(--rule); }
+  .site-footer a:hover { color: var(--ember); }
 
-  /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .page-intro   { animation: fadeUp 0.5s ease both; }
-  .filter-bar   { animation: fadeUp 0.5s 0.1s ease both; }
-  .posts-header { animation: fadeUp 0.5s 0.15s ease both; }
-  .post-card.featured { animation: fadeUp 0.5s 0.2s ease both; }
-  .post-card:nth-child(2) { animation: fadeUp 0.5s 0.25s ease both; }
-  .post-card:nth-child(3) { animation: fadeUp 0.5s 0.3s ease both; }
-  .post-card:nth-child(4) { animation: fadeUp 0.5s 0.35s ease both; }
-  .post-card:nth-child(5) { animation: fadeUp 0.5s 0.4s ease both; }
-
-  /* ── RESPONSIVE ── */
   @media (max-width: 680px) {
-    .page-intro { grid-template-columns: 1fr; }
-    .author-card { display: none; }
-    .post-card.featured { grid-template-columns: 1fr; }
-    .feat-visual { display: none; }
-    .site-header nav { display: none; }
-    .post-num { font-size: 1.4rem; min-width: 1.6rem; }
+    .site-header { padding: 0.9rem 1.25rem; }
+    .site-header nav a { margin-left: 0.9rem; font-size: 0.7rem; }
   }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="site-header">
-  <a class="logo" href="/">Asit Minz</a>
+  <a class="wordmark" href="/">asit minz<span class="caret" aria-hidden="true"></span></a>
   <nav>
-    <a href="https://github.com/Asit0007" target="_blank">GitHub</a>
-    <a href="https://linkedin.com/in/" target="_blank">LinkedIn</a>
-    <a href="mailto:asitminz007@gmail.com">Contact</a>
+    <a href="/about/">About</a>
+    <a href="https://github.com/Asit0007" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://linkedin.com/in/asitminz" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://x.com/asitminz" target="_blank" rel="noopener">X</a>
   </nav>
 </header>
 
-<!-- PAGE INTRO -->
-<section class="page-intro">
-  <div>
-    <div class="intro-eyebrow">Engineering Blog</div>
-    <h1 class="page-title">
-      Infrastructure.<br>
-      Systems. <em>Real-world</em><br>
-      problem solving.
-    </h1>
-    <p class="page-desc">
-      Deep-dives into DevOps, cloud infrastructure, and backend engineering — written from production experience, not tutorials.
-    </p>
-  </div>
-  <div class="author-card">
-    <div class="author-avatar">AM</div>
-    <div class="name">Asit Minz</div>
-    <div class="role">Infrastructure &amp; Backend Engineering</div>
-    <div class="author-links">
-      <a href="https://github.com/Asit0007" target="_blank">GitHub</a>
+<!-- HERO -->
+<section class="hero">
+  <span class="eyebrow">Asit Minz — the wiring behind AI</span>
+  <h1 class="page-title">Building &amp; explaining AI systems, from an <em>operator's chair</em></h1>
+  <p class="hero-desc">
+    I'm a cloud &amp; infrastructure engineer. On my own time I build AI systems solo, each one under a hard constraint &mdash; zero cost, zero open ports, no database &mdash; and I write down what actually happens when they run: what it costs, why it's slow, what breaks, how you test it. <strong>Production experience, not tutorials.</strong>
+  </p>
+  <div class="byline">
+    <span class="avatar" aria-hidden="true">a</span>
+    <span><span class="who">Asit Minz</span> &middot; ~4 yrs in enterprise cloud ops &middot; AZ-104 &middot; Terraform</span>
+    <span class="links">
+      <a href="/about/">About</a>
+      <a href="https://github.com/Asit0007" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://linkedin.com/in/asitminz" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://x.com/asitminz" target="_blank" rel="noopener">X</a>
       <a href="mailto:asitminz007@gmail.com">Email</a>
+    </span>
+  </div>
+</section>
+
+<!-- WHAT THIS IS -->
+<section class="band">
+  <span class="eyebrow">What you'll find here</span>
+  <h2>Three kinds of post</h2>
+  <p class="band-sub">Written for engineers who are tired of AI content that never shows the wiring.</p>
+  <div class="pillars">
+    <div class="pillar">
+      <div class="n">01 — Build logs</div>
+      <h3>Real systems, shipped in public</h3>
+      <p>What I'm building, the hard constraint, the decision I just made and why, what broke, what it cost.</p>
+    </div>
+    <div class="pillar">
+      <div class="n">02 — Systems, explained</div>
+      <h3>The machinery, from an operator's view</h3>
+      <p>Agent loops, RAG cost at scale, evals as a test suite, inference economics, why your agent is slow.</p>
+    </div>
+    <div class="pillar">
+      <div class="n">03 — The field, filtered</div>
+      <h3>One question: does it change what I'd build?</h3>
+      <p>New models, papers and tools &mdash; judged by whether they actually change what I'd ship on Monday.</p>
     </div>
   </div>
 </section>
 
-<!-- FILTER BAR -->
-<div class="filter-bar">
-  <span class="filter-label">Filter:</span>
-  <button class="filter-btn active" onclick="filterPosts('all', this)">All</button>
-  <button class="filter-btn" onclick="filterPosts('devops', this)">DevOps</button>
-  <button class="filter-btn" onclick="filterPosts('infra', this)">Infrastructure</button>
-  <button class="filter-btn" onclick="filterPosts('cloud', this)">Cloud</button>
-  <button class="filter-btn" onclick="filterPosts('security', this)">Security</button>
-</div>
+<!-- NEWSLETTER -->
+<section class="band newsletter">
+  <span class="eyebrow">Cold Start &mdash; the newsletter</span>
+  <h2>One issue when a piece ships. <em>No filler.</em></h2>
+  <p class="band-sub">The flagship essay, plus a couple of notes from the field. Roughly every three weeks.</p>
+  <!-- TODO: replace action with the real beehiiv subscribe URL once the "Cold Start" publication exists -->
+  <form action="https://REPLACE-WITH-BEEHIIV-PUBLICATION.beehiiv.com/subscribe" method="post" target="_blank">
+    <input type="email" name="email" placeholder="you@work.com" aria-label="Email address" required>
+    <button type="submit">Subscribe</button>
+  </form>
+  <p class="fineprint">Free. Unsubscribe anytime. No spam, no sequence, no course pitch.</p>
+</section>
 
-<!-- POSTS HEADER -->
-<div class="posts-header">
-  <span class="posts-count"><span id="visible-count">3</span> articles published</span>
-</div>
+<!-- WRITING -->
+<main class="posts">
+  <span class="eyebrow">Writing</span>
+  <h2>The operator track record</h2>
+  <p class="band-sub">These three predate the AI focus. They're the proof of the credential the whole thing rests on: constraint-driven systems, run in production, written up honestly. New AI build-logs are landing here now.</p>
 
-<!-- POSTS LIST -->
-<main class="posts-list" id="posts-container">
-
-  <!-- POST 1 — FEATURED -->
-  <a class="post-card featured" href="/posts/quantbot/" data-tags="devops infra cloud">
-    <div class="post-body">
+  <!-- FEATURED -->
+  <a class="post-card featured" href="/posts/quantbot/">
+    <div>
       <div class="post-tags">
-        <span class="tag devops">DevOps</span>
-        <span class="tag infra">Infrastructure</span>
+        <span class="tag ai">Case study</span>
+        <span class="tag">Infrastructure</span>
+        <span class="tag">Evals</span>
       </div>
       <div class="post-title">The Backtest That Lied</div>
       <div class="post-excerpt">
-        An automated BTC futures bot running unattended on a free-tier ARM box — Terraform, containers, a deploy pipeline that refuses to restart the bot mid-trade, and public HTTPS through zero open ports. It was validated against a backtest reporting +90.7% a year. The real figure is +13.7%. Two bugs had been cancelling each other out inside the one invariant anyone thought to check.
+        An automated BTC-futures bot running unattended on a low-cost ARM box, validated for months against a backtest reporting +90.7% a year. The real figure is +13.7%. Two bugs had been cancelling each other out inside the one invariant anyone thought to check &mdash; and the lesson (an invariant that holds is not proof) applies directly to how you test any non-deterministic system, evals included.
       </div>
-      <div class="post-meta" style="margin-top: 1rem;">
-        <span>September 2026</span>
-        <span class="dot"></span>
-        <span class="read-time">18 min read</span>
-      </div>
-    </div>
-    <div class="feat-visual">
-      <div class="feat-visual-row">
-        <div class="feat-stat">
-          <div class="val">+13.7%</div>
-          <div class="lbl">Real CAGR — was +90.7%</div>
-        </div>
-        <div class="feat-divider"></div>
-        <div class="feat-stat">
-          <div class="val" style="color: var(--accent);">126/126</div>
-          <div class="lbl">Trades reproduced</div>
-        </div>
-      </div>
-      <div class="feat-stat" style="margin-top: 0.5rem;">
-        <div class="val" style="font-size: 1.3rem; color: var(--ink-mid);">$0 / month</div>
-        <div class="lbl">Always-free ARM, 24/7</div>
+      <div class="post-meta"><span>September 2026</span><span class="dot"></span><span>18 min read</span></div>
+      <div class="featured-stats">
+        <div class="s"><div class="v">+13.7%</div><div class="l">Real CAGR — was +90.7%</div></div>
+        <div class="s"><div class="v hot">126/126</div><div class="l">Trades reproduced</div></div>
+        <div class="s"><div class="v" style="color:var(--ink-mid)">24/7</div><div class="l">Unattended, ARM, single host</div></div>
       </div>
     </div>
   </a>
 
   <!-- POST 2 -->
-  <a class="post-card" href="/posts/cloudpulse/" data-tags="cloud infra devops">
+  <a class="post-card" href="/posts/cloudpulse/">
     <div class="post-num">02</div>
-    <div class="post-body">
-      <div class="post-tags">
-        <span class="tag cloud">Cloud</span>
-        <span class="tag infra">Infrastructure</span>
-      </div>
+    <div>
+      <div class="post-tags"><span class="tag">Cloud</span><span class="tag sig">Cost</span></div>
       <div class="post-title">Engineering for Zero: A Cloud Dashboard That Costs Nothing to Run</div>
-      <div class="post-excerpt">
-        AWS Free Tier gives you 750 instance-hours and 100 GB of egress a month, and almost no visibility into either. CloudPulse tracks both from a single Go binary — built under one hard constraint: it must never cost a cent to run. Cost-driven API design, runtime secrets from Vault, and Terraform guardrails that make an expensive mistake impossible to plan.
-      </div>
-      <div class="post-meta">
-        <span>September 2026</span>
-        <span class="dot"></span>
-        <span class="read-time">12 min read</span>
-      </div>
+      <div class="post-excerpt">AWS Free Tier gives you 750 instance-hours and 100 GB of egress a month and almost no visibility into either. CloudPulse tracks both from a single Go binary, under one hard rule: it must never cost a cent. Cost-driven API design, runtime secrets from Vault, Terraform guardrails that make an expensive mistake impossible to plan.</div>
+      <div class="post-meta"><span>September 2026</span><span class="dot"></span><span>12 min read</span></div>
     </div>
-    <span class="post-arrow">&rarr;</span>
+    <span class="post-arrow" aria-hidden="true">&rarr;</span>
   </a>
 
   <!-- POST 3 -->
-  <a class="post-card" href="/posts/magento-deploykit/" data-tags="devops infra">
+  <a class="post-card" href="/posts/magento-deploykit/">
     <div class="post-num">03</div>
-    <div class="post-body">
-      <div class="post-tags">
-        <span class="tag devops">DevOps</span>
-        <span class="tag infra">Infrastructure</span>
-      </div>
+    <div>
+      <div class="post-tags"><span class="tag">Infrastructure</span><span class="tag">Automation</span></div>
       <div class="post-title">From Bare Server to Production Magento Stack in 7 Scripts</div>
-      <div class="post-excerpt">
-        A deep-dive into engineering a multi-layer Magento 2.4.8 deployment on Debian 12 — Varnish, Nginx, PHP-FPM, MySQL, Elasticsearch, and Redis, fully automated with idempotent shell scripts.
-      </div>
-      <div class="post-meta">
-        <span>April 2026</span>
-        <span class="dot"></span>
-        <span class="read-time">12 min read</span>
-      </div>
+      <div class="post-excerpt">Engineering a multi-layer Magento 2.4.8 deployment on Debian 12 &mdash; Varnish, Nginx, PHP-FPM, MySQL, Elasticsearch, Redis &mdash; fully automated with idempotent shell scripts. A 97% cut in data transferred on warm-cache requests.</div>
+      <div class="post-meta"><span>April 2026</span><span class="dot"></span><span>12 min read</span></div>
     </div>
-    <span class="post-arrow">&rarr;</span>
+    <span class="post-arrow" aria-hidden="true">&rarr;</span>
   </a>
-
-  <!-- COMING SOON PLACEHOLDERS — replace these as you write new posts -->
-
-  <a class="post-card coming-soon" href="#" data-tags="devops ci-cd">
-    <div class="post-num">04</div>
-    <div class="post-body">
-      <div class="post-tags">
-        <span class="tag devops">DevOps</span>
-        <span class="tag ci-cd">CI/CD</span>
-      </div>
-      <div class="post-title">Your next post title goes here</div>
-      <div class="post-excerpt">A short description of what this post covers — add this when you publish.</div>
-      <div class="post-meta">
-        <span>Coming soon</span>
-      </div>
-    </div>
-    <span class="soon-badge">Coming soon</span>
-  </a>
-
 </main>
 
-<!-- FOOTER -->
 <footer class="site-footer">
   <p>
-    Built by <a href="https://github.com/Asit0007" target="_blank">Asit Minz</a>  
-    <a href="mailto:asitminz007@gmail.com">asitminz007@gmail.com</a>
+    <a href="https://github.com/Asit0007" target="_blank" rel="noopener">GitHub</a> &nbsp;·&nbsp;
+    <a href="https://linkedin.com/in/asitminz" target="_blank" rel="noopener">LinkedIn</a> &nbsp;·&nbsp;
+    <a href="https://x.com/asitminz" target="_blank" rel="noopener">X</a> &nbsp;·&nbsp;
+    <a href="mailto:asitminz007@gmail.com">Email</a>
   </p>
+  <p>Asit Minz &mdash; production experience, not tutorials.</p>
 </footer>
-
-<script>
-  function filterPosts(tag, btn) {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    const cards = document.querySelectorAll('.posts-list .post-card:not(.coming-soon)');
-    let visible = 0;
-
-    cards.forEach(card => {
-      const tags = card.dataset.tags || '';
-      const show = tag === 'all' || tags.includes(tag);
-      card.style.display = show ? '' : 'none';
-      if (show) visible++;
-    });
-
-    const countEl = document.getElementById('visible-count');
-    countEl.textContent = visible;
-    document.querySelector('.posts-count').lastChild.textContent =
-      visible === 1 ? ' article published' : ' articles published';
-  }
-</script>
 
 </body>
 </html>
