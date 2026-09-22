@@ -34,7 +34,7 @@ in-repo mirror and the source of truth for anything visual — **read it first**
 | Path | What |
 |---|---|
 | `index.html` | Home — hero, 3 content pillars, Cold Start capture, writing list |
-| `about/index.html` | The story. **Still a DRAFT** — Asit edits it; has `[BRACKETED]` bits |
+| `about/index.html` | The story. **Still a DRAFT** — Asit edits it |
 | `posts/<slug>/index.html` | One self-contained page per post |
 | `assets/css/tokens.css` | Shared tokens (light + `prefers-color-scheme: dark`) |
 | `favicon.svg`, `assets/brand/mark*.svg` | The mark |
@@ -52,9 +52,10 @@ links resolve, dark mode reads, no horizontal scroll.
 
 ## Known follow-ups (also in BRAND.md)
 
-- `index.html` newsletter form action is a placeholder
-  (`REPLACE-WITH-BEEHIIV-PUBLICATION`) — the *Cold Start* beehiiv publication
-  doesn't exist yet.
+- `index.html` newsletter section shows a "coming soon" state (2026-09-22) — the
+  live subscribe form (`REPLACE-WITH-BEEHIIV-PUBLICATION` action) was swapped out
+  for honest copy; the original form is in git history (pre-2026-09-22), to
+  restore once the *Cold Start* beehiiv publication exists.
 - `posts/*/index.html` still carry their own inline `:root` (pre-`tokens.css`), so
   they're light-only; migrate them to `tokens.css` for site-wide dark mode.
 - No raster copies of the mark yet (`avatar-400.png`, `og-default.png`).

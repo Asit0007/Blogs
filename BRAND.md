@@ -76,10 +76,21 @@ social artboards: the Visual Identity Kit artifact.
 - `about/index.html` — new story page (DRAFT — marked for Asit's edit).
 - Posts: LinkedIn URL fixed, About link added, magento logo href fixed.
 
+**Done (2026-09-22 cross-project brand-alignment pass):**
+- Portfolio (`asitminz.com`) cross-linked from nav/byline/footer on `index.html`,
+  `about/index.html`, and the three post pages.
+- `about/index.html`: education line confirmed — B.Tech, Computer Science, IIIT
+  Bhubaneswar, 2018 (bracket resolved); JobPipe fact swapped for a ContentPipe one
+  (JobPipe is private, not a public brand-carrying property).
+- `index.html` newsletter section now shows an honest "coming soon" state instead
+  of a dead form pointed at the beehiiv placeholder URL.
+- The GitHub profile (`github.com/Asit0007`) and `asit-portfolio` were repositioned
+  the same way in the same pass — see their own repos' history.
+
 **TODO:**
-- [ ] Create the *Cold Start* beehiiv publication; replace
-      `REPLACE-WITH-BEEHIIV-PUBLICATION` in `index.html` (and `/#newsletter`
-      anchor target) with the real subscribe URL / embed.
+- [ ] Create the *Cold Start* beehiiv publication; then swap the "coming soon"
+      newsletter block in `index.html` back for a real subscribe form / embed
+      (the original form is in git history, pre-2026-09-22).
 - [x] Logomark finalised (avatar mark); `favicon.svg` + `assets/brand/mark*.svg`
       committed and wired into every page.
 - [ ] Export raster copies from `mark.svg`: `avatar-400.png` for platforms that
@@ -88,4 +99,5 @@ social artboards: the Visual Identity Kit artifact.
 - [ ] Migrate `posts/*/index.html` to `tokens.css` (drop their inline `:root`),
       then dark mode is consistent site-wide.
 - [ ] Claim `asitminz` on X/YouTube/IG/TikTok; the `x.com/asitminz` links assume it.
-- [ ] Asit: edit `about/index.html`, confirm the `[BRACKETED]` education line.
+- [x] Asit: edit `about/index.html`, confirm the `[BRACKETED]` education line —
+      confirmed 2026-09-22: IIIT Bhubaneswar, 2018.
