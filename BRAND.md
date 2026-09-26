@@ -65,6 +65,16 @@ social artboards: the Visual Identity Kit artifact.
 - **Color:** warm paper `#faf9f6`, ink `#0f0f0e`, one ember accent `#c84b11`, one
   functional green `signal #1a6b4a`, warm neutral `wire #8a8578`. **No gradients.**
   Warm-dark counterpart in the `@media (prefers-color-scheme: dark)` block.
+  `tokens.css` is the hex source of truth: its greys are deliberately warm-biased
+  (`ink-muted #7a756a`, dark `ink-mid #b8b3a8`), and the Playbook was corrected to
+  match on 2026-09-26.
+- **Where the palette applies (2026-09-26):** Blogs, and ContentPipe's UI — which
+  maps the dark tokens onto its Tailwind scales in one `@theme` block
+  (`ContentPipe/src/index.css`: zinc → warm neutrals, orange/amber → ember,
+  emerald → signal, blues → wire; no gradients). **Deliberate exceptions:**
+  `asit-portfolio`'s 3D world keeps its own documented game palette (`DESIGN.md`);
+  CloudPulse's frontend is still Bootstrap blue but nothing is deployed — align it
+  if it ever ships.
 - **Eyebrow pattern:** `.eyebrow` — 22px ember rule + uppercase mono ember label.
 
 ## This repo — what changed & what's left
