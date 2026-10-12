@@ -90,7 +90,7 @@ social artboards: the Visual Identity Kit artifact.
 - Portfolio (`asitminz.com`) cross-linked from nav/byline/footer on `index.html`,
   `about/index.html`, and the three post pages.
 - `about/index.html`: education line confirmed — B.Tech, Computer Science, IIIT
-  Bhubaneswar, 2018 (bracket resolved); JobPipe fact swapped for a ContentPipe one
+  Bhubaneswar, 2020 (bracket resolved; corrected from 2018 by the owner 2026-10-12: "on paper my graduation year is 2020"); JobPipe fact swapped for a ContentPipe one
   (JobPipe is private, not a public brand-carrying property).
 - `index.html` newsletter section now shows an honest "coming soon" state instead
   of a dead form pointed at the beehiiv placeholder URL.
@@ -110,4 +110,4 @@ social artboards: the Visual Identity Kit artifact.
       then dark mode is consistent site-wide.
 - [ ] Claim `asitminz` on X/YouTube/IG/TikTok; the `x.com/asitminz` links assume it.
 - [x] Asit: edit `about/index.html`, confirm the `[BRACKETED]` education line —
-      confirmed 2026-09-22: IIIT Bhubaneswar, 2018.
+      confirmed 2026-09-22: IIIT Bhubaneswar, 2020 (2018 was wrong; owner, 2026-10-12).
