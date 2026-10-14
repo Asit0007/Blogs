@@ -403,11 +403,13 @@
   max-width: 0;
   overflow: hidden;
   white-space: nowrap;
+  text-overflow: ellipsis;
   opacity: 0;
   transition: max-width 0.35s ease-out, opacity 0.25s;
 }
+/* labels open only as far as the empty margin beside the 780px article column */
 .press-rail:hover .press-rail__label,
-.press-rail:focus-within .press-rail__label { max-width: 15rem; opacity: 1; }
+.press-rail:focus-within .press-rail__label { max-width: min(15rem, calc(50vw - 390px - 5.5rem)); opacity: 1; }
 .press-rail a:hover, .press-rail a.is-active { color: var(--ink); }
 
 /* colophon */
