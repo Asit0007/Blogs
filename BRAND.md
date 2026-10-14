@@ -76,6 +76,10 @@ social artboards: the Visual Identity Kit artifact.
   CloudPulse's frontend is still Bootstrap blue but nothing is deployed — align it
   if it ever ships.
 - **Eyebrow pattern:** `.eyebrow` — 22px ember rule + uppercase mono ember label.
+- **Volume covers (2026-10-14):** each post is a "volume" with its own cover colour, drawn only
+  from the palette above: ink `#141310` (Vol. 01), ember `#c84b11` (02), wire `#8a8578` (03),
+  sink paper `#efece4` (04). Ember stays the only accent; on the ember cover the accent becomes ink.
+  Signal green is kept for meaning (status, good numbers) and is not used as a cover.
 
 ## This repo — what changed & what's left
 

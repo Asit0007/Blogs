@@ -9,6 +9,7 @@
 <link rel="canonical" href="https://blogs.asitminz.com/posts/magento-deploykit/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/tokens.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -563,22 +564,51 @@
     h2 { font-size: 1.4rem; }
   }
 </style>
+<link rel="stylesheet" href="/assets/css/press.css">
+<script src="/assets/js/press.js" defer></script>
 </head>
-<body>
+<body class="press-post">
 
 <header class="site-header">
-  <a class="logo" href="/">Asit Minz</a>
+  <div class="masthead">
+    <a class="wordmark" href="/">asit minz<span class="caret" aria-hidden="true"></span></a>
+    <span class="masthead-tagline">Production experience, not tutorials.</span>
+  </div>
   <nav>
     <a href="/about/">About</a>
     <a href="https://asitminz.com" target="_blank">Portfolio</a>
     <a href="https://github.com/Asit0007" target="_blank">GitHub</a>
     <a href="https://linkedin.com/in/asitminz" target="_blank">LinkedIn</a>
-    <a href="/cdn-cgi/l/email-protection#b5d4c6dcc1d8dcdbcf858582f5d2d8d4dcd99bd6dad8">Contact</a>
+    <a href="mailto:asitminz007@gmail.com">Contact</a>
   </nav>
 </header>
 
 <!-- HERO -->
-<section class="hero">
+<section class="hero press-hero vol--magento">
+  <div class="press-hero__stage">
+    <div class="book" data-book style="--bt: 30px; --title-scale: 0.092" aria-hidden="true">
+      <div class="book__body">
+        <div class="book__face book__front">
+          <span class="book__vol">Vol. 04</span>
+          <span class="book__title">From Bare Server to Production <em>Magento Stack</em> in 7 Scripts</span>
+          <span class="book__kicker">Infrastructure &middot; Automation</span>
+          <span class="book__foot"><span class="book__author">Asit Minz</span><span class="book__caret"></span></span>
+        </div>
+        <div class="book__face book__back"><span class="press-mark">a<i></i></span></div>
+        <div class="book__face book__spine">
+          <span class="book__spine-title">Bare Server to Magento in 7 Scripts</span>
+          <span class="book__spine-vol">Vol. 04</span>
+          <span class="press-mark" style="font-size: 11px">a<i></i></span>
+        </div>
+        <div class="book__face book__pages"></div>
+        <div class="book__face book__top"></div>
+        <div class="book__face book__bottom"></div>
+      </div>
+    </div>
+  </div>
+  <div class="press-hero__info">
+  <span class="eyebrow">Vol. 04 &mdash; the operator track record</span>
+
   <div class="hero-meta">
     <span class="tag">DevOps</span>
     <span class="tag green">Infrastructure</span>
@@ -594,16 +624,12 @@
     <em>Magento Stack</em> in 7 Scripts
   </h1>
 
+  <p class="press-byline">Asit Minz<span>Infrastructure &amp; Backend Engineering</span></p>
+  <span class="press-rule" aria-hidden="true"></span>
+
   <p class="hero-sub">
     A deep-dive into engineering a multi-layer, production-grade Magento 2 deployment — covering architecture decisions, service topology, caching strategy, and everything that broke along the way.
   </p>
-
-  <div class="author-row">
-    <div class="author-avatar">AM</div>
-    <div class="author-info">
-      <div class="name">Asit Minz</div>
-      <div class="role">Infrastructure &amp; Backend Engineering</div>
-    </div>
   </div>
 </section>
 
@@ -623,7 +649,7 @@
 <main class="content">
 
   <div class="toc">
-    <div class="toc-title">In this article</div>
+    <div class="toc-title">Contents</div>
     <ol>
       <li><a href="#problem">The Engineering Problem</a></li>
       <li><a href="#architecture">Architecture &amp; Design Decisions</a></li>
@@ -913,10 +939,29 @@
     <p>All 7 scripts, the NGINX config, architecture diagram, and a documented errors guide are in the repository.</p>
     <div class="cta-links">
       <a class="cta-btn primary" href="https://github.com/Asit0007/Magento_DeployKit" target="_blank">GitHub — Magento_DeployKit</a>
-      <a class="cta-btn secondary" href="/cdn-cgi/l/email-protection#bedfcdd7cad3d7d0c48e8e89fed9d3dfd7d290ddd1d3">Get in touch</a>
+      <a class="cta-btn secondary" href="mailto:asitminz007@gmail.com">Get in touch</a>
     </div>
   </div>
 
   <div class="footnote">
     <span>Built on DigitalOcean BLR1 · Debian 12 · 2 vCPU / 4 GB RAM</span>
-    <span>Asit Minz · <a href="/cdn-cgi/
+    <span>Asit Minz · <a href="mailto:asitminz007@gmail.com">asitminz007@gmail.com</a></span>
+  </div>
+
+</main>
+<footer class="colophon">
+  <span class="press-mark" aria-hidden="true">a<i></i></span>
+  <p class="colophon__label">Colophon</p>
+  <p class="colophon__text">Volume 04 of the operator track record, written by Asit Minz. Set in DM Serif Display, DM Sans and JetBrains Mono on warm paper, with one ember accent. Static HTML, no build step.</p>
+  <p>
+    <a href="/#shelf">The shelf</a> &nbsp;&middot;&nbsp;
+    <a href="/about/">About</a> &nbsp;&middot;&nbsp;
+    <a href="https://asitminz.com" target="_blank" rel="noopener">Portfolio</a> &nbsp;&middot;&nbsp;
+    <a href="https://github.com/Asit0007" target="_blank" rel="noopener">GitHub</a> &nbsp;&middot;&nbsp;
+    <a href="https://linkedin.com/in/asitminz" target="_blank" rel="noopener">LinkedIn</a> &nbsp;&middot;&nbsp;
+    <a href="mailto:asitminz007@gmail.com">Email</a>
+  </p>
+</footer>
+
+</body>
+</html>

@@ -3,7 +3,8 @@
 The personal blog of **Asit Minz**. Static HTML, GitHub Pages from repo root
 (`Asit0007/Blogs`), custom domain `blogs.asitminz.com`. No build step, no
 framework, no dependencies. Each page is self-contained HTML with an inline
-`<style>` block; the only shared file is `assets/css/tokens.css`.
+`<style>` block. Shared files: `assets/css/tokens.css` (tokens), and
+`assets/css/press.css` + `assets/js/press.js` (the "volumes" design, below).
 
 ## Positioning (as of 2026-09-04 rebrand)
 
@@ -33,10 +34,11 @@ in-repo mirror and the source of truth for anything visual — **read it first**
 
 | Path | What |
 |---|---|
-| `index.html` | Home — hero, 3 content pillars, Cold Start capture, writing list |
+| `index.html` | Home — hero, the shelf (writing, as a pile of volumes), 3 content pillars, Cold Start capture |
 | `about/index.html` | The story. **Still a DRAFT** — Asit edits it |
 | `posts/<slug>/index.html` | One self-contained page per post |
 | `assets/css/tokens.css` | Shared tokens (light + `prefers-color-scheme: dark`) |
+| `assets/css/press.css`, `assets/js/press.js` | The volumes design (2026-10-14): each post is a bound volume with a CSS 3D book on a cover-coloured title page; the home page's writing list is a pile of spines. Loaded *after* each page's inline `<style>`. The JS only adds motion (book turn, chapter rail, shelf switching); pages read fine without it |
 | `favicon.svg`, `assets/brand/mark*.svg` | The mark |
 | `assets/og/template.html` | 1200×630 OG image template — screenshot per post |
 | `BRAND.md` | Brand reference + the live TODO list |
@@ -49,6 +51,14 @@ python3 -m http.server 8000   # http://localhost:8000
 
 Verify: open `index.html`, `about/`, and each post at desktop and ≤680px; check
 links resolve, dark mode reads, no horizontal scroll.
+
+## Volumes (2026-10-14)
+
+Inspired by press.stripe.com's book-object idea, studied and rebuilt from scratch (no Stripe code,
+fonts or assets). A new post needs: `<body class="press-post">`, a `vol--<slug>` class on its hero with
+a palette in `press.css` (every cover background and text colour is a `tokens.css` colour, only the hairline rules are tints; covers are fixed hex, not
+theme-dependent), the `.book` markup copied from an existing post (`--bt` = thickness, roughly read
+minutes × 2.4px), a spine + `.volume` entry in `index.html`'s shelf, and the next volume number.
 
 ## Known follow-ups (also in BRAND.md)
 

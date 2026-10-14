@@ -183,93 +183,6 @@
   .newsletter button:hover { opacity: 0.85; }
   .newsletter .fineprint { margin-top: 0.8rem; font-family: var(--font-mono); font-size: 0.68rem; color: var(--ink-faint); }
 
-  /* ── WRITING LIST ── */
-  .posts { max-width: 900px; margin: 0 auto; padding: clamp(3rem, 6vw, 4.5rem) 2rem clamp(4rem, 8vw, 6rem); }
-  .posts > .eyebrow { margin-bottom: 1.5rem; }
-  .posts > h2 {
-    font-family: var(--font-serif); font-size: clamp(1.5rem, 3vw, 2rem);
-    letter-spacing: -0.015em; margin-bottom: 0.6rem; text-wrap: balance;
-  }
-  .posts > .band-sub { color: var(--ink-mid); max-width: var(--measure); margin-bottom: 2.2rem; font-size: 0.98rem; }
-
-  .post-card {
-    display: grid;
-    grid-template-columns: 2.5rem 1fr auto;
-    gap: 0 1.5rem;
-    align-items: start;
-    padding: 1.5rem 0.75rem;
-    border-top: 1px solid var(--rule);
-    color: inherit;
-    transition: background 0.15s;
-    border-radius: 6px;
-    margin: 0 -0.75rem;
-  }
-  .post-card:last-child { border-bottom: 1px solid var(--rule); }
-  .post-card:hover { background: var(--bg-card); }
-  .post-num {
-    font-family: var(--font-serif); font-size: 1.6rem; color: var(--ink-faint);
-    line-height: 1; padding-top: 0.15rem; text-align: right;
-    transition: color 0.2s;
-  }
-  .post-card:hover .post-num { color: var(--ember); }
-  .post-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.55rem; }
-  .tag {
-    font-family: var(--font-mono);
-    font-size: 0.62rem; font-weight: 500;
-    letter-spacing: 0.06em; text-transform: uppercase;
-    padding: 0.25em 0.6em; border-radius: 2px;
-    border: 1px solid var(--rule); color: var(--ink-muted);
-  }
-  .tag.ai { border-color: var(--ember); color: var(--ember); }
-  .tag.sig { border-color: var(--signal); color: var(--signal); }
-  .post-title {
-    font-family: var(--font-serif); font-size: 1.3rem; font-weight: 400;
-    letter-spacing: -0.01em; color: var(--ink); line-height: 1.28;
-    margin-bottom: 0.45rem; transition: color 0.2s;
-  }
-  .post-card:hover .post-title { color: var(--ember); }
-  .post-excerpt { font-size: 0.9rem; color: var(--ink-muted); line-height: 1.6; margin-bottom: 0.7rem; max-width: 62ch; }
-  .post-meta {
-    display: flex; align-items: center; gap: 0.5rem;
-    font-size: 0.72rem; color: var(--ink-faint); font-family: var(--font-mono);
-  }
-  .post-meta .dot { width: 2px; height: 2px; background: currentColor; border-radius: 50%; }
-  .post-arrow { font-size: 1rem; color: var(--ink-faint); padding-top: 0.3rem; transition: all 0.2s; }
-  .post-card:hover .post-arrow { color: var(--ember); transform: translateX(3px); }
-
-  .post-card.featured {
-    grid-template-columns: 1fr;
-    background: var(--bg-card);
-    border: 1px solid var(--rule);
-    border-radius: 10px;
-    padding: 1.8rem 2rem;
-    margin-bottom: 1.25rem;
-    position: relative;
-  }
-  .post-card.featured::after {
-    content: 'Start here';
-    position: absolute; top: 1.4rem; right: 1.6rem;
-    font-family: var(--font-mono); font-size: 0.6rem; font-weight: 500;
-    letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--ember); background: var(--ember-soft);
-    padding: 0.2em 0.6em; border-radius: 2px;
-  }
-  .post-card.featured .post-num { display: none; }
-  .post-card.featured .post-title { font-size: 1.6rem; }
-  .post-card.featured .post-arrow { display: none; }
-  .featured-stats {
-    display: flex; gap: 1.75rem; margin-top: 1rem; flex-wrap: wrap;
-    padding-top: 1rem; border-top: 1px solid var(--rule);
-  }
-  .featured-stats .s .v { font-family: var(--font-serif); font-size: 1.3rem; color: var(--signal); line-height: 1; }
-  .featured-stats .s .v.hot { color: var(--ember); }
-  .featured-stats .s .l { font-family: var(--font-mono); font-size: 0.62rem; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.25rem; }
-  @media (max-width: 620px) {
-    .post-card { grid-template-columns: 1fr; }
-    .post-num { display: none; }
-    .post-arrow { display: none; }
-  }
-
   /* ── FOOTER ── */
   .site-footer {
     border-top: 1px solid var(--rule);
@@ -288,11 +201,16 @@
     .site-header nav a { margin-left: 0.9rem; font-size: 0.7rem; }
   }
 </style>
+<link rel="stylesheet" href="/assets/css/press.css">
+<script src="/assets/js/press.js" defer></script>
 </head>
 <body>
 
 <header class="site-header">
-  <a class="wordmark" href="/">asit minz<span class="caret" aria-hidden="true"></span></a>
+  <div class="masthead">
+    <a class="wordmark" href="/">asit minz<span class="caret" aria-hidden="true"></span></a>
+    <span class="masthead-tagline">Production experience, not tutorials.</span>
+  </div>
   <nav>
     <a href="/about/">About</a>
     <a href="https://asitminz.com" target="_blank" rel="noopener">Portfolio</a>
@@ -322,6 +240,113 @@
     </span>
   </div>
 </section>
+
+<!-- WRITING: the shelf. Each post is a volume; the band takes the colour of the one you point at. -->
+<main class="shelf vol--quantbot" id="shelf">
+  <div class="shelf__inner">
+    <div class="shelf__head">
+      <span class="eyebrow">Writing &mdash; the shelf</span>
+      <h2>The operator <em>track record</em></h2>
+      <p>These predate the AI focus. They're the proof of the credential the whole thing rests on: constraint-driven systems, run in production, written up honestly. New AI build-logs are landing here now.</p>
+    </div>
+
+    <div class="shelf__grid">
+      <div class="pile" aria-label="Volumes">
+      <a class="spine vol--quantbot" data-vol="quantbot" href="/posts/quantbot/" style="--i: 0; --t: 64px; --len: 86%; --nudge: -5%">
+        <span class="spine__box">
+          <span class="spine__face spine__top"></span>
+          <span class="spine__face spine__front">
+            <span class="spine__vol">01</span>
+            <span class="spine__title">The Backtest That Lied</span>
+            <span class="spine__author">Asit Minz</span>
+            <span class="press-mark" aria-hidden="true">a<i></i></span>
+          </span>
+        </span>
+      </a>
+      <a class="spine vol--crypto-dex" data-vol="crypto-dex" href="/posts/crypto-dex/" style="--i: 1; --t: 67px; --len: 95%; --nudge: 3%">
+        <span class="spine__box">
+          <span class="spine__face spine__top"></span>
+          <span class="spine__face spine__front">
+            <span class="spine__vol">02</span>
+            <span class="spine__title">The SDK That Vanished</span>
+            <span class="spine__author">Asit Minz</span>
+            <span class="press-mark" aria-hidden="true">a<i></i></span>
+          </span>
+        </span>
+      </a>
+      <a class="spine vol--cloudpulse" data-vol="cloudpulse" href="/posts/cloudpulse/" style="--i: 2; --t: 44px; --len: 82%; --nudge: -1%">
+        <span class="spine__box">
+          <span class="spine__face spine__top"></span>
+          <span class="spine__face spine__front">
+            <span class="spine__vol">03</span>
+            <span class="spine__title">Engineering for Zero</span>
+            <span class="spine__author">Asit Minz</span>
+            <span class="press-mark" aria-hidden="true">a<i></i></span>
+          </span>
+        </span>
+      </a>
+      <a class="spine vol--magento" data-vol="magento" href="/posts/magento-deploykit/" style="--i: 3; --t: 44px; --len: 97%; --nudge: 2%">
+        <span class="spine__box">
+          <span class="spine__face spine__top"></span>
+          <span class="spine__face spine__front">
+            <span class="spine__vol">04</span>
+            <span class="spine__title">From Bare Server to Production Magento Stack in 7 Scripts</span>
+            <span class="spine__author">Asit Minz</span>
+            <span class="press-mark" aria-hidden="true">a<i></i></span>
+          </span>
+        </span>
+      </a>
+      </div>
+
+      <div class="shelf__volumes">
+        <article class="volume vol--quantbot is-active" data-vol="quantbot">
+          <span class="eyebrow">Vol. 01 &mdash; Case study &middot; Evals</span>
+          <h3>The Backtest That Lied</h3>
+          <p class="volume__by">Asit Minz</p>
+          <span class="press-rule" aria-hidden="true"></span>
+          <p class="volume__excerpt">An automated BTC-futures bot running unattended on a low-cost ARM box, validated for months against a backtest reporting +90.7% a year. The real figure is +13.7%. Two bugs had been cancelling each other out inside the one invariant anyone thought to check &mdash; and the lesson (an invariant that holds is not proof) applies directly to how you test any non-deterministic system, evals included.</p>
+          <div class="volume__stats">
+            <div class="s"><div class="v">+13.7%</div><div class="l">Real CAGR — was +90.7%</div></div>
+            <div class="s"><div class="v">126/126</div><div class="l">Trades reproduced</div></div>
+            <div class="s"><div class="v">24/7</div><div class="l">Unattended, ARM, single host</div></div>
+          </div>
+          <p class="volume__meta">September 2026 &middot; 18 min read &middot; start here</p>
+          <a class="volume__read" href="/posts/quantbot/">Read volume 01</a>
+        </article>
+
+        <article class="volume vol--crypto-dex" data-vol="crypto-dex">
+          <span class="eyebrow">Vol. 02 &mdash; Web3 &middot; Migration</span>
+          <h3>The SDK That Vanished</h3>
+          <p class="volume__by">Asit Minz</p>
+          <span class="press-rule" aria-hidden="true"></span>
+          <p class="volume__excerpt">Crypto-DEX ran with no backend by delegating every read to a hosted Web3 API and every swap route to a server-side plugin. Then the vendor discontinued that product, and it failed silently &mdash; a guard clause returning <code>null</code>, no error anywhere. The reframe &mdash; &ldquo;does this need an indexer?&rdquo; rather than &ldquo;is it a read or a write?&rdquo; &mdash; turned 19 files into 3. Six critical advisories in the production bundle finished the last 3, in the wrong order and a week early.</p>
+          <p class="volume__meta">September 2026 &middot; 19 min read</p>
+          <a class="volume__read" href="/posts/crypto-dex/">Read volume 02</a>
+        </article>
+
+        <article class="volume vol--cloudpulse" data-vol="cloudpulse">
+          <span class="eyebrow">Vol. 03 &mdash; Cloud &middot; Cost</span>
+          <h3>Engineering for Zero: A Cloud Dashboard That Costs Nothing to Run</h3>
+          <p class="volume__by">Asit Minz</p>
+          <span class="press-rule" aria-hidden="true"></span>
+          <p class="volume__excerpt">AWS Free Tier gives you 750 instance-hours and 100 GB of egress a month and almost no visibility into either. CloudPulse tracks both from a single Go binary, under one hard rule: it must never cost a cent. Cost-driven API design, runtime secrets from Vault, Terraform guardrails that make an expensive mistake impossible to plan.</p>
+          <p class="volume__meta">September 2026 &middot; 12 min read</p>
+          <a class="volume__read" href="/posts/cloudpulse/">Read volume 03</a>
+        </article>
+
+        <article class="volume vol--magento" data-vol="magento">
+          <span class="eyebrow">Vol. 04 &mdash; Infrastructure &middot; Automation</span>
+          <h3>From Bare Server to Production Magento Stack in 7 Scripts</h3>
+          <p class="volume__by">Asit Minz</p>
+          <span class="press-rule" aria-hidden="true"></span>
+          <p class="volume__excerpt">Engineering a multi-layer Magento 2.4.8 deployment on Debian 12 &mdash; Varnish, Nginx, PHP-FPM, MySQL, Elasticsearch, Redis &mdash; fully automated with idempotent shell scripts. A 97% cut in data transferred on warm-cache requests.</p>
+          <p class="volume__meta">April 2026 &middot; 12 min read</p>
+          <a class="volume__read" href="/posts/magento-deploykit/">Read volume 04</a>
+        </article>
+      </div>
+    </div>
+  </div>
+</main>
 
 <!-- WHAT THIS IS -->
 <section class="band">
@@ -357,69 +382,6 @@
   <p class="fineprint">Follow <a href="https://x.com/asitminz" target="_blank" rel="noopener">@asitminz</a> for the launch, or check back here.</p>
 </section>
 
-<!-- WRITING -->
-<main class="posts">
-  <span class="eyebrow">Writing</span>
-  <h2>The operator track record</h2>
-  <p class="band-sub">These predate the AI focus. They're the proof of the credential the whole thing rests on: constraint-driven systems, run in production, written up honestly. New AI build-logs are landing here now.</p>
-
-  <!-- FEATURED -->
-  <a class="post-card featured" href="/posts/quantbot/">
-    <div>
-      <div class="post-tags">
-        <span class="tag ai">Case study</span>
-        <span class="tag">Infrastructure</span>
-        <span class="tag">Evals</span>
-      </div>
-      <div class="post-title">The Backtest That Lied</div>
-      <div class="post-excerpt">
-        An automated BTC-futures bot running unattended on a low-cost ARM box, validated for months against a backtest reporting +90.7% a year. The real figure is +13.7%. Two bugs had been cancelling each other out inside the one invariant anyone thought to check &mdash; and the lesson (an invariant that holds is not proof) applies directly to how you test any non-deterministic system, evals included.
-      </div>
-      <div class="post-meta"><span>September 2026</span><span class="dot"></span><span>18 min read</span></div>
-      <div class="featured-stats">
-        <div class="s"><div class="v">+13.7%</div><div class="l">Real CAGR — was +90.7%</div></div>
-        <div class="s"><div class="v hot">126/126</div><div class="l">Trades reproduced</div></div>
-        <div class="s"><div class="v" style="color:var(--ink-mid)">24/7</div><div class="l">Unattended, ARM, single host</div></div>
-      </div>
-    </div>
-  </a>
-
-  <!-- POST 2 -->
-  <a class="post-card" href="/posts/crypto-dex/">
-    <div class="post-num">02</div>
-    <div>
-      <div class="post-tags"><span class="tag">Web3</span><span class="tag sig">Migration</span></div>
-      <div class="post-title">The SDK That Vanished</div>
-      <div class="post-excerpt">Crypto-DEX ran with no backend by delegating every read to a hosted Web3 API and every swap route to a server-side plugin. Then the vendor discontinued that product, and it failed silently &mdash; a guard clause returning <code>null</code>, no error anywhere. The reframe &mdash; &ldquo;does this need an indexer?&rdquo; rather than &ldquo;is it a read or a write?&rdquo; &mdash; turned 19 files into 3. Six critical advisories in the production bundle finished the last 3, in the wrong order and a week early.</div>
-      <div class="post-meta"><span>September 2026</span><span class="dot"></span><span>19 min read</span></div>
-    </div>
-    <span class="post-arrow" aria-hidden="true">&rarr;</span>
-  </a>
-
-  <!-- POST 3 -->
-  <a class="post-card" href="/posts/cloudpulse/">
-    <div class="post-num">03</div>
-    <div>
-      <div class="post-tags"><span class="tag">Cloud</span><span class="tag sig">Cost</span></div>
-      <div class="post-title">Engineering for Zero: A Cloud Dashboard That Costs Nothing to Run</div>
-      <div class="post-excerpt">AWS Free Tier gives you 750 instance-hours and 100 GB of egress a month and almost no visibility into either. CloudPulse tracks both from a single Go binary, under one hard rule: it must never cost a cent. Cost-driven API design, runtime secrets from Vault, Terraform guardrails that make an expensive mistake impossible to plan.</div>
-      <div class="post-meta"><span>September 2026</span><span class="dot"></span><span>12 min read</span></div>
-    </div>
-    <span class="post-arrow" aria-hidden="true">&rarr;</span>
-  </a>
-
-  <!-- POST 4 -->
-  <a class="post-card" href="/posts/magento-deploykit/">
-    <div class="post-num">04</div>
-    <div>
-      <div class="post-tags"><span class="tag">Infrastructure</span><span class="tag">Automation</span></div>
-      <div class="post-title">From Bare Server to Production Magento Stack in 7 Scripts</div>
-      <div class="post-excerpt">Engineering a multi-layer Magento 2.4.8 deployment on Debian 12 &mdash; Varnish, Nginx, PHP-FPM, MySQL, Elasticsearch, Redis &mdash; fully automated with idempotent shell scripts. A 97% cut in data transferred on warm-cache requests.</div>
-      <div class="post-meta"><span>April 2026</span><span class="dot"></span><span>12 min read</span></div>
-    </div>
-    <span class="post-arrow" aria-hidden="true">&rarr;</span>
-  </a>
-</main>
 
 <footer class="site-footer">
   <p>
