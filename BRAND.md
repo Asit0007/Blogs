@@ -75,6 +75,12 @@ social artboards: the Visual Identity Kit artifact.
   `asit-portfolio`'s 3D world keeps its own documented game palette (`DESIGN.md`);
   CloudPulse's frontend is still Bootstrap blue but nothing is deployed — align it
   if it ever ships.
+  **`/books/` (2026-10-15, owner)** is also a deliberate exception: the page where this blog presents
+  Tilly Tracewell's *Start at the Dot!* workbooks to parents keeps the books' own kid style (Fredoka +
+  Lato, coral, star yellow, Dot the mascot), because it sells to parents, not recruiters. It is written
+  about the books in the third person and carries a plain disclosure that Tilly Tracewell is the pen
+  name of Asit's AI Media imprint. It is **generated** by `AI Media/KDP-Publishing` (`make blog`), so
+  never edit `books/` by hand.
 - **Eyebrow pattern:** `.eyebrow` — 22px ember rule + uppercase mono ember label.
 - **Volume covers (2026-10-14):** each post is a "volume" with its own cover colour, drawn only
   from the palette above: ink `#141310` (Vol. 01), ember `#c84b11` (02), wire `#8a8578` (03),
