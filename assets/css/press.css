@@ -502,7 +502,9 @@
 }
 .spine:hover .spine__box,
 .spine:focus-visible .spine__box,
-.spine.is-active .spine__box { transform: rotateX(-16deg) translateX(clamp(14px, 3vw, 34px)) translateZ(26px); }
+.spine.is-active .spine__box { transform: rotateX(-16deg) translateX(clamp(14px, 3vw, 34px)); }
+/* sideways only: under a camera looking down, pulling a volume toward the
+   reader (translateZ) drops it onto the one below, and it reads as sunk in */
 .spine__face { position: absolute; }
 .spine__front {
   inset: 0;

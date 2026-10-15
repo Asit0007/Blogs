@@ -5,6 +5,11 @@
    ============================================================ */
 
 :root {
+  /* the site has its own dark theme (below): saying so stops Chrome's
+     auto-dark and similar tools from inverting it, which turns the light
+     book covers black and their dark lettering white */
+  color-scheme: light dark;
+
   /* ink + ground */
   --ink:        #0f0f0e;
   --ink-mid:    #3a3a36;
